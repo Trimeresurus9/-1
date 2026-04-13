@@ -877,7 +877,6 @@ export function HomeSearchLanding({
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-slate-900">{isZh ? item.zhStage : item.enStage}</p>
-                      <p className="mt-1 max-w-[15rem] text-sm leading-6 text-slate-500">{isZh ? item.zhMeta : item.enMeta}</p>
                     </div>
                   </div>
                 </article>
