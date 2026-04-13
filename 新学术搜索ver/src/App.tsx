@@ -41,18 +41,19 @@ if (typeof console !== 'undefined') {
 
 // WisPaper Main Application
 export default function App() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [hasSearched, setHasSearched] = useState(false);
-  const [filters, setFilters] = useState<FilterOptions>({
+  const defaultFilters: FilterOptions = {
     years: [],
     categories: [],
     sortBy: "relevance",
-  });
+  };
+  const [searchQuery, setSearchQuery] = useState("");
+  const [hasSearched, setHasSearched] = useState(false);
+  const [filters, setFilters] = useState<FilterOptions>(defaultFilters);
   const [selectedPaper, setSelectedPaper] =
     useState<Paper | null>(null);
   const [viewMode, setViewMode] = useState<
     "home" | "list" | "detail" | "library" | "scholar-qa" | "all-feeds" | "paper-reproduction" | "idea-discovery"
-  >("all-feeds");
+  >("home");
   const [showTasksModal, setShowTasksModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showPaywallModal, setShowPaywallModal] = useState(false);
@@ -179,6 +180,22 @@ export default function App() {
   const handleResetSearch = () => {
     setSearchQuery('');
     setHasSearched(false);
+    setFilters(defaultFilters);
+  };
+
+  const handleStartSearchFromHome = (query?: string) => {
+    setSelectedPaper(null);
+    setFilters(defaultFilters);
+    setViewMode("list");
+
+    if (query?.trim()) {
+      setSearchQuery(query.trim());
+      setHasSearched(true);
+      return;
+    }
+
+    setSearchQuery('');
+    setHasSearched(false);
   };
 
   return (
@@ -202,7 +219,12 @@ export default function App() {
         <div className="flex-1 flex flex-col min-w-0">
           {viewMode === "home" ? (
             // Show HomePage
-            <HomePage onNavigateToWorkspace={() => setViewMode("all-feeds")} />
+            <HomePage
+              onNavigateToWorkspace={() => setViewMode("all-feeds")}
+              onNavigate={(view) => setViewMode(view as any)}
+              onOpenPricing={() => setShowPaywallModal(true)}
+              onStartSearch={handleStartSearchFromHome}
+            />
           ) : viewMode === "list" ? (
             !hasSearched ? (
               // Show Scholar Search Home when no search has been performed

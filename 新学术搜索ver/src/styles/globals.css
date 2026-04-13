@@ -183,3 +183,137 @@
 html {
   font-size: var(--font-size);
 }
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes float-delayed {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(12px);
+  }
+}
+
+@keyframes fade-up-enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes surface-shine {
+  0% {
+    transform: translateX(-120%);
+  }
+
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes logo-loop-left {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes logo-loop-right {
+  from {
+    transform: translateX(-50%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+.float-delayed {
+  animation: float-delayed 10s ease-in-out infinite;
+}
+
+.fade-up-enter {
+  animation: fade-up-enter 0.7s ease-out both;
+}
+
+.surface-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.34) 45%, transparent 80%);
+  transform: translateX(-120%);
+  animation: surface-shine 8s linear infinite;
+}
+
+.logo-loop-row {
+  width: 100%;
+  overflow: hidden;
+}
+
+.logo-loop-track {
+  display: flex;
+  width: max-content;
+  gap: 1rem;
+  padding-inline: 1.5rem;
+  will-change: transform;
+  animation: logo-loop-left 28s linear infinite;
+}
+
+.logo-loop-track-reverse {
+  animation-name: logo-loop-right;
+  animation-duration: 32s;
+}
+
+.audience-loop-track {
+  display: flex;
+  width: max-content;
+  gap: 1.25rem;
+  padding-inline: 1.5rem;
+  will-change: transform;
+  animation: logo-loop-left 38s linear infinite;
+}
+
+.audience-fade-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-loop-track,
+  .logo-loop-track-reverse,
+  .audience-loop-track {
+    animation: none;
+  }
+}

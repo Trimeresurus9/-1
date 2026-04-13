@@ -7,7 +7,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from './ui/input';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from './ui/pagination';
 import { Switch } from './ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Tabs, TabsContent } from './ui/tabs';
+import { CardNavTabs } from './ai-feeds/CardNavTabs';
 import { RecommendedPapers, type FeedPaperItem } from './ai-feeds/RecommendedPapers';
 import { type FeedPreferenceState } from './ai-feeds/PersonalizationPanel';
 import { TrendDetailDrawer } from './ai-feeds/TrendDetailDrawer';
@@ -901,17 +902,15 @@ export function AllFeedsWorkspace() {
           <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'trends' | 'latest' | 'for-you')} className="gap-6">
             <AIFeedsSearchHero />
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <TabsList className={`w-full max-w-sm justify-start rounded-2xl ${feedPanelClassName} p-1`}>
-                <TabsTrigger value="trends" className="rounded-xl px-4 py-2 data-[state=active]:shadow-sm">
-                  {t('aiFeeds.tab.trends')}
-                </TabsTrigger>
-                <TabsTrigger value="latest" className="rounded-xl px-4 py-2 data-[state=active]:shadow-sm">
-                  {t('aiFeeds.tab.latest')}
-                </TabsTrigger>
-                <TabsTrigger value="for-you" className="rounded-xl px-4 py-2 data-[state=active]:shadow-sm">
-                  {t('aiFeeds.tab.forYou')}
-                </TabsTrigger>
-              </TabsList>
+              <CardNavTabs
+                items={[
+                  { value: 'trends', label: t('aiFeeds.tab.trends') },
+                  { value: 'latest', label: t('aiFeeds.tab.latest') },
+                  { value: 'for-you', label: t('aiFeeds.tab.forYou') },
+                ]}
+                value={activeTab}
+                onValueChange={(value) => setActiveTab(value as 'trends' | 'latest' | 'for-you')}
+              />
               <Button
                 type="button"
                 variant="outline"
