@@ -69,11 +69,10 @@ const featureMenuItems: Array<{ key: MarketingPageKey; label: string }> = [
   { key: 'idea-discovery', label: 'Idea Discovery' },
   { key: 'projects', label: 'Projects' },
   { key: 'ai-feeds', label: 'AI Feeds' },
+  { key: 'ai-survey', label: 'AI Survey' },
 ];
 
 const resourceMenuItems: Array<{ key: MarketingPageKey; label: string }> = [
-  { key: 'ai-feeds', label: 'AI Feeds' },
-  { key: 'ai-survey', label: 'AI Survey' },
   { key: 'blog', label: 'Blog' },
   { key: 'translation', label: 'Translation' },
   { key: 'faq', label: 'FAQ' },
@@ -156,6 +155,14 @@ export function HomePage({ onNavigateToWorkspace, onNavigate, onOpenPricing, onS
           onContinueToSurvey={onNavigateToWorkspace}
           onNavigateToMarketingPage={setActivePage}
         />
+      );
+    }
+
+    if (page === 'faq') {
+      return (
+        <div className="space-y-8">
+          <HomeFaqSection language={language} />
+        </div>
       );
     }
 
@@ -672,7 +679,7 @@ export function HomePage({ onNavigateToWorkspace, onNavigate, onOpenPricing, onS
       {isHomePage ? (
         <div className="px-6 pb-10">
           <div className="mx-auto max-w-7xl space-y-8">
-            <HomeFaqSection language={language} />
+            <HomeFaqSection language={language} onViewMore={() => setActivePage('faq')} />
             <LogoLoop language={language} />
             <HomeCtaBanner isZh={isZh} onStartSearch={() => handleStartSearch()} />
           </div>

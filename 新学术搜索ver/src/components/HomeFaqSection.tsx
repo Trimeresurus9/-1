@@ -1,10 +1,11 @@
 import React from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 
 type MarketingLanguage = 'zh' | 'en';
 
 interface HomeFaqSectionProps {
   language: MarketingLanguage;
+  onViewMore?: () => void;
 }
 
 const faqItems = [
@@ -40,7 +41,7 @@ const faqItems = [
   },
 ];
 
-export function HomeFaqSection({ language }: HomeFaqSectionProps) {
+export function HomeFaqSection({ language, onViewMore }: HomeFaqSectionProps) {
   const isZh = language === 'zh';
   const [expandedIndexes, setExpandedIndexes] = React.useState<number[]>([]);
 
@@ -85,6 +86,19 @@ export function HomeFaqSection({ language }: HomeFaqSectionProps) {
             );
           })}
         </div>
+
+        {onViewMore ? (
+          <div className="mt-8 flex justify-center">
+            <button
+              type="button"
+              onClick={onViewMore}
+              className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+            >
+              <span>{isZh ? '查看更多' : 'View More'}</span>
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
+        ) : null}
       </div>
     </section>
   );

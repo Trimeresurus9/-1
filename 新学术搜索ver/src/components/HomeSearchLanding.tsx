@@ -1,14 +1,15 @@
 import React from 'react';
 import {
+  ArrowUp,
   ArrowRight,
   BookOpen,
   Check,
-  ChevronDown,
   Compass,
   Database,
   FileSearch,
   Filter,
   FolderKanban,
+  Globe,
   Layers3,
   ListFilter,
   MessageSquareText,
@@ -17,6 +18,7 @@ import {
   Sparkles,
   TableProperties,
 } from 'lucide-react';
+import { TextType } from './TextType';
 
 type MarketingLanguage = 'zh' | 'en';
 type HomeSearchLandingMode = 'home' | 'search';
@@ -194,16 +196,6 @@ const featureOverviewCards = [
     border: 'border-cyan-200/70',
   },
   {
-    key: 'ai-feeds' as const,
-    icon: ShieldCheck,
-    zhTitle: 'AI Feeds',
-    enTitle: 'AI Feeds',
-    zhBody: '持续追踪你所在方向的新论文、趋势与值得关注的研究信号，让信息输入从一次性搜索变成长期研究订阅。',
-    enBody: 'Continuously track new papers, trends, and research signals in your area so discovery becomes an ongoing feed instead of a one-off search.',
-    accent: 'bg-slate-100 text-slate-700',
-    border: 'border-slate-200/80',
-  },
-  {
     key: 'library' as const,
     icon: BookOpen,
     zhTitle: 'Library',
@@ -214,14 +206,14 @@ const featureOverviewCards = [
     border: 'border-indigo-200/70',
   },
   {
-    key: 'ai-survey' as const,
-    icon: Database,
-    zhTitle: 'AI Survey',
-    enTitle: 'AI Survey',
-    zhBody: '自动生成即时综述与知识导图，帮你在不下载全文的情况下快速看清知识脉络。',
-    enBody: 'Generate instant surveys and knowledge maps so you can understand the structure of search results without downloading full papers.',
-    accent: 'bg-teal-100 text-teal-700',
-    border: 'border-teal-200/70',
+    key: 'idea-discovery' as const,
+    icon: Sparkles,
+    zhTitle: 'Idea Discovery',
+    enTitle: 'Idea Discovery',
+    zhBody: '通过 Agent 多轮提问逐步明确研究方向，再结合搜索与 PDF 解析能力，帮助你发现研究缺口和科研灵感。',
+    enBody: 'Use a multi-turn agent to clarify research direction, then combine search and PDF analysis to uncover gaps and generate research ideas.',
+    accent: 'bg-emerald-100 text-emerald-700',
+    border: 'border-emerald-200/70',
   },
   {
     key: 'paperclaw' as const,
@@ -234,14 +226,24 @@ const featureOverviewCards = [
     border: 'border-cyan-200/70',
   },
   {
-    key: 'idea-discovery' as const,
-    icon: Sparkles,
-    zhTitle: 'Idea Discovery',
-    enTitle: 'Idea Discovery',
-    zhBody: '通过 Agent 多轮提问逐步明确研究方向，再结合搜索与 PDF 解析能力，帮助你发现研究缺口和科研灵感。',
-    enBody: 'Use a multi-turn agent to clarify research direction, then combine search and PDF analysis to uncover gaps and generate research ideas.',
-    accent: 'bg-emerald-100 text-emerald-700',
-    border: 'border-emerald-200/70',
+    key: 'ai-survey' as const,
+    icon: Database,
+    zhTitle: 'AI Survey',
+    enTitle: 'AI Survey',
+    zhBody: '自动生成即时综述与知识导图，帮你在不下载全文的情况下快速看清知识脉络。',
+    enBody: 'Generate instant surveys and knowledge maps so you can understand the structure of search results without downloading full papers.',
+    accent: 'bg-teal-100 text-teal-700',
+    border: 'border-teal-200/70',
+  },
+  {
+    key: 'ai-feeds' as const,
+    icon: ShieldCheck,
+    zhTitle: 'AI Feeds',
+    enTitle: 'AI Feeds',
+    zhBody: '持续追踪你所在方向的新论文、趋势与值得关注的研究信号，让信息输入从一次性搜索变成长期研究订阅。',
+    enBody: 'Continuously track new papers, trends, and research signals in your area so discovery becomes an ongoing feed instead of a one-off search.',
+    accent: 'bg-slate-100 text-slate-700',
+    border: 'border-slate-200/80',
   },
   {
     key: 'scholar-qa' as const,
@@ -301,75 +303,6 @@ const comparisonRows = [
   { zhLabel: '是否支持继续进入 Survey 工作流', enLabel: 'Continues into survey workflow', zhLeft: '支持', enLeft: 'Yes', zhRight: '不支持', enRight: 'No' },
 ];
 
-const faqItems = [
-  {
-    zhQuestion: '如何从零开始做学术研究？',
-    enQuestion: 'How to start academic research from scratch?',
-    zhAnswer: '从零开始做研究，先要缩小主题范围，明确研究问题，再通过文献检索理解已有工作和研究空白。先搭好问题和资料框架，后面的实验设计和写作才不会失焦。',
-    enAnswer: 'Start by narrowing the topic, defining a research question, and using literature search to understand prior work and open gaps. A clear problem and source map make later experiment design and writing much more focused.',
-  },
-  {
-    zhQuestion: '如何为一个研究主题找到相关论文？',
-    enQuestion: 'How do I find truly relevant papers for a research topic?',
-    zhAnswer: '先把研究主题拆成任务、方法、数据集和限制条件，再据此检索和筛选。比起只搜几个关键词，这种方式更容易排除噪音，找到真正相关的论文。',
-    enAnswer: 'Break the topic into task, method, dataset, and constraints, then search and filter with that structure. This works better than a few keywords when you need to remove noise and surface papers that are actually relevant.',
-  },
-  {
-    zhQuestion: '如何更高效地阅读学术论文？',
-    enQuestion: 'How to read research papers more efficiently?',
-    zhAnswer: '先看摘要、引言、图表和结论判断是否值得深读，再进入方法和实验部分。这样能先抓住核心贡献，减少在线性通读上花掉的时间。',
-    enAnswer: 'Start with the abstract, introduction, figures, and conclusion to decide whether the paper deserves a deeper read. This helps you capture the core contribution before spending time on a full pass.',
-  },
-  {
-    zhQuestion: '如何识别一个领域里的研究空白？',
-    enQuestion: 'How to identify research gaps in a field?',
-    zhAnswer: '不要只总结已有工作，更要看哪些问题还没被回答、哪些结果互相矛盾、哪些人群或场景还没人研究。研究空白通常就藏在这些缺口里。',
-    enAnswer: 'Do more than summarize what exists. Look for unanswered questions, conflicting findings, and populations or settings that are still underexplored. Those are often where research gaps appear.',
-  },
-  {
-    zhQuestion: '如何整理研究项目中的文献？',
-    enQuestion: 'How to organize literature for a research project?',
-    zhAnswer: '把文献按主题、方法、数据集或研究问题分组，并持续记录每篇论文的核心结论和局限。这样后面写综述、做对比和回看证据都会更快。',
-    enAnswer: 'Group papers by theme, method, dataset, or research question, and keep notes on each paper’s key findings and limitations. That makes later comparison, review writing, and evidence tracing much faster.',
-  },
-  {
-    zhQuestion: '做文献综述时如何节省时间？',
-    enQuestion: 'How to save time when doing literature review?',
-    zhAnswer: '关键是把搜索、筛选、整理和总结流程化，而不是每一步都从头做。先快速判断相关性，再把高价值论文沉淀进可复用的结构里。',
-    enAnswer: 'The main lever is making search, screening, organization, and summarization systematic instead of starting from scratch each time. Triage relevance quickly, then keep the high-value papers in a reusable structure.',
-  },
-  {
-    zhQuestion: '如何快速总结学术论文？',
-    enQuestion: 'How to summarize academic papers quickly?',
-    zhAnswer: '先提炼研究问题、方法、主要发现和限制，再判断它和你的课题有什么关系。一个好摘要不是复述全文，而是抓住最影响你决策的部分。',
-    enAnswer: 'Extract the research question, method, main findings, and limitations first, then connect them to your own topic. A good summary is not a full retelling but a compact view of what matters for your decision-making.',
-  },
-  {
-    zhQuestion: '如何判断一篇论文是否可靠？',
-    enQuestion: 'How to know if a research paper is reliable?',
-    zhAnswer: '先看发表来源、研究方法、数据是否透明，以及作者有没有清楚说明限制和潜在利益冲突。同行评审和期刊声誉很重要，但仍然需要自己做基本判断。',
-    enAnswer: 'Check the publication venue, methodology, data transparency, and whether the authors clearly state limitations and possible conflicts of interest. Peer review and journal reputation matter, but they do not replace your own judgment.',
-  },
-  {
-    zhQuestion: '如何避免虚假或低质量论文？',
-    enQuestion: 'How to avoid fake or low-quality papers?',
-    zhAnswer: '优先使用可信数据库和正式期刊，留意异常夸张的结论、不清楚的作者背景，以及缺少可靠评审痕迹的来源。可疑论文越早排除，后面的研究成本越低。',
-    enAnswer: 'Prefer trusted databases and established journals, and watch for exaggerated claims, unclear author backgrounds, or sources with weak review signals. The earlier you filter these out, the less downstream research waste you create.',
-  },
-  {
-    zhQuestion: '如何验证学术研究中的来源？',
-    enQuestion: 'How to verify sources in academic research?',
-    zhAnswer: '不要停留在二手引用，尽量回到原始论文、原始数据或最初的报告。真正可靠的验证，来自对源头证据的直接检查，而不是重复转述。',
-    enAnswer: 'Do not stop at secondary citations. Go back to the original paper, dataset, or report whenever possible. Reliable verification comes from checking the source evidence directly instead of repeating someone else’s summary.',
-  },
-  {
-    zhQuestion: '如何快速评估一篇论文的质量？',
-    enQuestion: 'How to evaluate the quality of a paper quickly?',
-    zhAnswer: '先看它研究的问题是否重要，方法是否合理，结果是否支撑结论，再看有没有明确承认局限。快速判断的目标不是替代深读，而是帮你决定优先级。',
-    enAnswer: 'Start with whether the problem matters, whether the method is sound, whether the results support the claims, and whether the paper acknowledges its limitations. Quick evaluation is not a replacement for deep reading; it helps you set priorities.',
-  },
-];
-
 export function HomeSearchLanding({
   language,
   mode,
@@ -377,11 +310,17 @@ export function HomeSearchLanding({
   onContinueToSurvey,
   onNavigateToMarketingPage,
 }: HomeSearchLandingProps) {
-  const [expandedFaq, setExpandedFaq] = React.useState<number | null>(0);
+  const [landingSearchQuery, setLandingSearchQuery] = React.useState('');
   const isZh = language === 'zh';
   const isSearchMode = mode === 'search';
   const homeTitle = 'WisPaper: Your AI Academic Search Engine';
   const homeDescription = 'Complete literature discovery, deep reading, analysis, and knowledge-base building in one AI workspace, reducing days of research to minutes.';
+
+  const handleLandingSearch = React.useCallback(() => {
+    if (landingSearchQuery.trim()) {
+      onStartSearch(landingSearchQuery.trim());
+    }
+  }, [landingSearchQuery, onStartSearch]);
 
   React.useEffect(() => {
     document.title = isSearchMode
@@ -430,8 +369,6 @@ export function HomeSearchLanding({
     syncMeta('meta[name="twitter:description"]', 'content');
   }, [homeDescription, homeTitle, isSearchMode, isZh]);
 
-  const heroTitle = isZh ? 'WisPaper: 你的AI 学术搜索引擎' : 'WisPaper: Your AI Academic Search Engine';
-
   return (
     <div className="space-y-16 pb-8 text-slate-900">
       {!isSearchMode ? (
@@ -441,19 +378,61 @@ export function HomeSearchLanding({
       >
         <div className="relative fade-up-enter">
           <div className="mx-auto max-w-4xl text-center">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-4 py-2 text-sm font-medium text-cyan-900">
+            <div className="mb-5 inline-flex min-h-10 items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-4 py-2 text-sm font-medium text-cyan-900">
               <Sparkles className="h-4 w-4" />
               <span>{isZh ? '面向学术界的全链路科研加速器' : 'The world-leading end-to-end research accelerator'}</span>
             </div>
 
-            <h1 className="mx-auto max-w-4xl text-4xl font-black tracking-tight text-slate-950 md:text-6xl">
-              {heroTitle}
+            <h1 className="mx-auto min-h-[5.5rem] max-w-4xl text-4xl font-black tracking-tight leading-[1.05] text-slate-950 md:min-h-[8.5rem] md:text-6xl">
+              {isZh ? (
+                <span className="flex flex-col items-center leading-[1.05]">
+                  <span>WisPaper:</span>
+                  <TextType
+                    text="你的AI 学术搜索引擎"
+                    typingSpeed={48}
+                    startDelay={220}
+                    className="mt-1 block"
+                  />
+                </span>
+              ) : (
+                <span className="flex flex-col items-center leading-[1.05]">
+                  <span>WisPaper:</span>
+                  <TextType
+                    text="Your AI Academic Search Engine"
+                    typingSpeed={48}
+                    startDelay={220}
+                    className="mt-1 block"
+                  />
+                </span>
+              )}
             </h1>
-            <p className="mx-auto mt-4 max-w-3xl text-xl leading-8 text-slate-700">
+            <p className="mx-auto mt-4 min-h-[4rem] max-w-3xl text-xl leading-8 text-slate-700 md:min-h-[5rem]">
               {isZh
                 ? '助你一站式完成文献查找、精读分析与知识库搭建，将数天的调研工作量缩减至分钟级。'
                 : 'Complete literature discovery, deep reading, analysis, and knowledge-base building in one AI workspace, reducing days of research to minutes.'}
             </p>
+            <div className="mx-auto mt-6 w-full max-w-3xl rounded-2xl border border-gray-200 bg-white p-2 shadow-sm">
+              <div className="flex items-center gap-2">
+                <input
+                  value={landingSearchQuery}
+                  onChange={(e) => setLandingSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleLandingSearch();
+                    }
+                  }}
+                  placeholder={isZh ? '例如：找最近3年研究 AI4Science 的论文…' : 'e.g., Find me papers that study AI4Science in recent 3 years...'}
+                  className="h-9 w-full border-0 px-3 text-sm focus:outline-none"
+                />
+                <button
+                  onClick={handleLandingSearch}
+                  className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-900 text-white transition-colors hover:bg-gray-800"
+                >
+                  <Search className="h-4.5 w-4.5" />
+                </button>
+              </div>
+            </div>
 
             <div className="mx-auto mt-10 max-w-5xl">
               <div className="relative overflow-hidden rounded-[2rem] border border-slate-200/90 bg-slate-950 shadow-[0_32px_120px_-70px_rgba(15,23,42,0.85)]">
@@ -500,10 +479,10 @@ export function HomeSearchLanding({
 
           <div className="mx-auto mt-14 max-w-[88rem]">
             <div className="mx-auto max-w-3xl text-center">
-              <h2 className="text-3xl font-bold tracking-tight text-slate-950 md:text-4xl">
+              <h2 className="min-h-[4rem] text-3xl font-bold tracking-tight text-slate-950 md:min-h-[5rem] md:text-4xl">
                 {isZh ? '不止搜索，更是一整套科研工作流' : 'More than search, a complete research workflow'}
               </h2>
-              <p className="mt-4 text-base leading-7 text-slate-600">
+              <p className="mt-4 min-h-[3.5rem] text-base leading-7 text-slate-600 md:min-h-[3.75rem]">
                 {isZh
                   ? 'WisPaper提供多种工具和Agents，助您轻松识别研究缺口，优选科研路径。'
                   : 'WisPaper offers a range of tools and agents to help you identify research gaps and choose stronger research paths with less effort.'}
@@ -526,6 +505,7 @@ export function HomeSearchLanding({
                     ) : null}
 
                     <div className="relative flex min-h-[142px] flex-col">
+                      <div className="min-h-[3rem]">
                       <div className="flex items-center gap-3">
                         <div className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${card.accent} shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]`}>
                           <Icon className="h-5 w-5" />
@@ -535,8 +515,9 @@ export function HomeSearchLanding({
                           {isZh ? card.zhTitle : card.enTitle}
                         </h3>
                       </div>
+                      </div>
 
-                      <p className="mt-3 max-w-[28ch] text-[0.9rem] leading-7 text-slate-600">
+                      <p className="mt-3 min-h-[5.25rem] max-w-[28ch] text-[0.9rem] leading-7 text-slate-600">
                         {isZh ? card.zhBody : card.enBody}
                       </p>
                     </div>
@@ -550,60 +531,113 @@ export function HomeSearchLanding({
       ) : null}
 
       {isSearchMode ? (
-      <section className="grid gap-4 md:grid-cols-3">
-        {[
-          {
-            zhTitle: 'AI文献搜索',
-            enTitle: 'AI literature search',
-            zhBody: '承接搜索引擎进入的新用户',
-            enBody: 'Built to capture high-intent traffic from search engines.',
-          },
-          {
-            zhTitle: '文献综述工具',
-            enTitle: 'Literature review tool',
-            zhBody: '围绕研究问题而不是关键词组织搜索',
-            enBody: 'Organizes search around research questions instead of plain keywords.',
-          },
-          {
-            zhTitle: 'Google Scholar alternative',
-            enTitle: 'Google Scholar alternative',
-            zhBody: '更适合复杂筛选与结果对比',
-            enBody: 'Better for complex filtering and structured comparison.',
-          },
-        ].map((item) => (
-          <div key={item.enTitle} className="rounded-[1.5rem] border border-slate-200 bg-white px-5 py-4 shadow-sm">
-            <p className="text-sm font-semibold text-slate-950">{isZh ? item.zhTitle : item.enTitle}</p>
-            <p className="mt-2 text-sm leading-6 text-slate-500">{isZh ? item.zhBody : item.enBody}</p>
+      <section className="px-6 py-4 md:px-10 md:py-6">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-8 text-center">
+            <h1 className="min-h-[3.5rem] text-4xl font-bold text-blue-600 md:min-h-[4rem]">
+              {isZh ? '用更聪明的方式开始学术搜索' : 'Start your academic search more intelligently'}
+            </h1>
+            <p className="mx-auto mt-3 min-h-[3.5rem] max-w-2xl text-base leading-7 text-slate-600">
+              {isZh
+                ? '围绕研究问题、方法与数据集直接描述你的需求，然后开始搜索。'
+                : 'Describe your research question, method, or dataset directly and start searching.'}
+            </p>
           </div>
-        ))}
+
+          <div className="rounded-[1.75rem] border border-[#d9d9de] bg-[#f2f2f4] p-4 shadow-[0_8px_20px_-18px_rgba(15,23,42,0.55)] md:p-5">
+            <div className="relative rounded-[1.5rem] border border-[#d8d8dc] bg-[#efeff1] px-5 py-4">
+              <textarea
+                value={landingSearchQuery}
+                onChange={(e) => setLandingSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleLandingSearch();
+                  }
+                }}
+                placeholder=""
+                rows={1}
+                className="w-full resize-none bg-transparent text-base leading-7 text-slate-700 focus:outline-none"
+              />
+              {!landingSearchQuery ? (
+                <div className="pointer-events-none absolute inset-x-5 top-1/2 -translate-y-1/2">
+                  <div className="h-6 w-2/3 animate-pulse rounded-md bg-slate-300/65" />
+                </div>
+              ) : null}
+            </div>
+
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-2 rounded-full border border-[#d3d3d8] bg-[#ececef] p-1.5 pl-4 pr-3"
+                >
+                  <Search className="h-5 w-5 text-slate-500" />
+                  <span className="inline-flex items-center gap-2 rounded-full border border-[#d0d0d4] bg-[#e5e5e9] px-4 py-2 shadow-[0_2px_8px_-6px_rgba(15,23,42,0.45)]">
+                    <Globe className="h-5 w-5" />
+                    <span className="h-4 w-20 animate-pulse rounded bg-slate-400/60" />
+                  </span>
+                </button>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={handleLandingSearch}
+                  className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#16a5e8] text-white transition hover:bg-[#0f98d8]"
+                >
+                  <ArrowUp className="h-6 w-6" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
       ) : null}
 
       {isSearchMode ? (
-      <section className="space-y-6">
-        <div className="max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-700">
-            {isZh ? 'Pain Points' : 'Pain Points'}
-          </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">
-            {isZh ? '学术搜索为什么总让你越搜越累？' : 'Why does academic search become exhausting so quickly?'}
-          </h2>
-          <p className="mt-3 text-base leading-7 text-slate-600">
-            {isZh
-              ? '把复杂搜索的真实成本说清楚，用户才知道这个首页和普通产品介绍页不一样。'
-              : 'Translate abstract search problems into real research friction so users immediately understand why this is not a generic product page.'}
-          </p>
-        </div>
-        <div className="grid gap-6 md:grid-cols-3">
-          {painPoints.map((item) => (
-            <article key={item.enTitle} className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
-              <div className="mb-5 inline-flex rounded-2xl bg-slate-950 p-3 text-white">
-                <Filter className="h-5 w-5" />
-              </div>
-              <h3 className="text-xl font-semibold text-slate-950">{isZh ? item.zhTitle : item.enTitle}</h3>
-              <p className="mt-3 text-sm leading-7 text-slate-700">{isZh ? item.zhBody : item.enBody}</p>
-            </article>
-          ))}
+      <section className="rounded-[2rem] bg-white px-4 py-8 md:px-6">
+        <div className="grid gap-10 md:grid-cols-3 md:gap-8">
+          {painPoints.map((item, index) => {
+            const visuals = [
+              {
+                icon: Filter,
+                shell: 'bg-[#ead6ff]',
+                blob: 'bg-[#e2ccff]',
+                rotate: '-rotate-6',
+              },
+              {
+                icon: Search,
+                shell: 'bg-[#d7deff]',
+                blob: 'bg-[#cfd7ff]',
+                rotate: 'rotate-6',
+              },
+              {
+                icon: Compass,
+                shell: 'bg-[#cfe8ff]',
+                blob: 'bg-[#c6e0fb]',
+                rotate: '-rotate-3',
+              },
+            ][index];
+
+            const Icon = visuals.icon;
+
+            return (
+              <article key={item.enTitle} className="flex flex-col items-center text-center">
+                <div className="relative mb-6 flex h-32 w-32 items-center justify-center">
+                  <div className={`absolute h-24 w-24 rounded-[1.75rem] ${visuals.blob} ${visuals.rotate}`} />
+                  <div className={`relative flex h-24 w-24 items-center justify-center rounded-full ${visuals.shell} shadow-[0_18px_40px_-28px_rgba(15,23,42,0.35)]`}>
+                    <Icon className="h-11 w-11 text-slate-950" strokeWidth={1.7} />
+                  </div>
+                </div>
+                <h3 className="max-w-[14ch] text-2xl font-bold tracking-tight text-slate-950">
+                  {isZh ? item.zhTitle : item.enTitle}
+                </h3>
+                <p className="mt-4 max-w-[19ch] text-lg leading-[1.55] text-slate-700 md:max-w-[20ch]">
+                  {isZh ? item.zhBody : item.enBody}
+                </p>
+              </article>
+            );
+          })}
         </div>
       </section>
       ) : null}
@@ -842,14 +876,15 @@ export function HomeSearchLanding({
       </section>
       ) : null}
 
+      {!isSearchMode ? (
       <section className="space-y-6">
         <div className="relative overflow-hidden rounded-[2rem] bg-white/22 px-0 py-8 backdrop-blur-xl">
 
           <div className="px-6 pb-6 text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-slate-950 md:text-4xl">
+            <h2 className="min-h-[4rem] text-3xl font-bold tracking-tight text-slate-950 md:min-h-[5rem] md:text-4xl">
               {isZh ? '全球科研人员都在用 WisPaper' : 'Researchers around the world use WisPaper'}
             </h2>
-            <p className="mx-auto mt-4 max-w-3xl text-base leading-7 text-slate-600">
+            <p className="mx-auto mt-4 min-h-[3.5rem] max-w-3xl text-base leading-7 text-slate-600 md:min-h-[3.75rem]">
               {isZh
                 ? '围绕文献查找、精读分析、综述写作与知识库沉淀，WisPaper 正在成为越来越多科研用户的日常工作台。'
                 : 'Across literature search, deep reading, review writing, and knowledge-base building, WisPaper is becoming a daily workspace for more researchers.'}
@@ -863,11 +898,11 @@ export function HomeSearchLanding({
                   key={`${item.short}-${index}`}
                   className="flex min-h-[21rem] w-[21rem] min-w-[21rem] flex-col rounded-[2rem] border border-slate-200/80 bg-white/92 p-7 text-left shadow-[0_20px_60px_-44px_rgba(15,23,42,0.34)]"
                 >
-                  <h3 className="text-[1.25rem] font-semibold leading-8 tracking-tight text-slate-950">
+                  <h3 className="min-h-[4rem] text-[1.25rem] font-semibold leading-8 tracking-tight text-slate-950">
                     {isZh ? item.zhTitle : item.enTitle}
                   </h3>
 
-                  <p className="mt-4 text-[0.98rem] leading-8 text-slate-700">
+                  <p className="mt-4 min-h-[8rem] text-[0.98rem] leading-8 text-slate-700">
                     {isZh ? item.zhBody : item.enBody}
                   </p>
 
@@ -885,6 +920,7 @@ export function HomeSearchLanding({
           </div>
         </div>
       </section>
+      ) : null}
 
       {isSearchMode ? (
       <section id="comparison" className="rounded-[2rem] border border-slate-200 bg-white px-6 py-8 shadow-sm md:px-8">
@@ -912,66 +948,6 @@ export function HomeSearchLanding({
               <span>{isZh ? row.zhRight : row.enRight}</span>
             </div>
           ))}
-        </div>
-      </section>
-      ) : null}
-
-      {isSearchMode ? (
-      <section id="example-queries" className="rounded-[2rem] border border-slate-200 bg-white px-6 py-8 shadow-sm md:px-8">
-        <div className="max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-700">Example Queries</p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">
-            {isZh ? '可以直接点击的示例搜索' : 'Example queries you can click right away'}
-          </h2>
-        </div>
-        <div className="mt-8 grid gap-4 lg:grid-cols-3">
-          {exampleQueries.map((item) => (
-            <button
-              key={item.en}
-              type="button"
-              onClick={() => onStartSearch(isZh ? item.zh : item.en)}
-              className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5 text-left transition hover:-translate-y-1 hover:border-slate-300 hover:bg-white hover:shadow-md"
-            >
-              <p className="text-sm leading-7 text-slate-700">{isZh ? item.zh : item.en}</p>
-            </button>
-          ))}
-        </div>
-      </section>
-      ) : null}
-
-      {isSearchMode ? (
-      <section id="faq" className="rounded-[2rem] border border-slate-200 bg-white px-6 py-8 shadow-sm md:px-8">
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-700">FAQ</p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">{isZh ? '常见问题' : 'Frequently asked questions'}</h2>
-          </div>
-          <div className="rounded-full bg-slate-100 px-3 py-2 text-sm text-slate-600">
-            {isZh ? '承接 Deep Search / Google Scholar alternative 等长尾词' : 'Supports long-tail queries like Deep Search and Google Scholar alternative'}
-          </div>
-        </div>
-        <div className="mt-8 space-y-3">
-          {faqItems.map((item, index) => {
-            const isOpen = expandedFaq === index;
-
-            return (
-              <article key={item.enQuestion} className="overflow-hidden rounded-[1.25rem] border border-slate-200 bg-slate-50">
-                <button
-                  type="button"
-                  onClick={() => setExpandedFaq(isOpen ? null : index)}
-                  className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
-                >
-                  <span className="text-sm font-semibold text-slate-950">{isZh ? item.zhQuestion : item.enQuestion}</span>
-                  <ChevronDown className={`h-4 w-4 text-slate-500 transition ${isOpen ? 'rotate-180' : ''}`} />
-                </button>
-                {isOpen ? (
-                  <div className="border-t border-slate-200 px-5 py-4 text-sm leading-7 text-slate-600">
-                    {isZh ? item.zhAnswer : item.enAnswer}
-                  </div>
-                ) : null}
-              </article>
-            );
-          })}
         </div>
       </section>
       ) : null}
