@@ -123,6 +123,7 @@ export function HomePage({ onNavigateToWorkspace, onNavigate, onOpenPricing, onS
   const [language, setLanguage] = React.useState<'zh' | 'en'>('zh');
   const isZh = language === 'zh';
   const isHomePage = activePage === 'home';
+  const isSearchPage = activePage === 'search';
 
   const handleStartSearch = (query?: string) => {
     if (onStartSearch) {
@@ -672,8 +673,8 @@ export function HomePage({ onNavigateToWorkspace, onNavigate, onOpenPricing, onS
         </div>
       </header>
 
-      <main className="px-6 pb-16 pt-8">
-        <div className="mx-auto max-w-7xl">{renderPage(activePage)}</div>
+      <main className={cn("pb-16 pt-8", isSearchPage ? "px-0" : "px-6")}>
+        {isSearchPage ? renderPage(activePage) : <div className="mx-auto max-w-7xl">{renderPage(activePage)}</div>}
       </main>
 
       {isHomePage ? (
