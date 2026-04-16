@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Globe, Bell, Settings, Gift, ArrowRight, Users, User, Download, LogOut, ChevronRight, Mail, Coins, HelpCircle, Crown, UserPlus, MessageSquare, X } from 'lucide-react';
+import { Globe, Bell, Settings, Gift, ArrowRight, Users, User, Download, LogOut, ChevronRight, ChevronDown, Mail, Coins, HelpCircle, Crown, UserPlus, MessageSquare, X } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { FeedbackModal } from './FeedbackModal';
 import { ShinyText } from './ShinyText';
@@ -18,7 +18,13 @@ export function UserPanel({ onOpenInvite, onOpenPaywall, onOpenRecharge, onOpenN
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showInviteBanner, setShowInviteBanner] = useState(true);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [showDownloadMenu, setShowDownloadMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const downloadLinks = {
+    windows: 'https://download.wispaper.com/windows',
+    macApple: 'https://download.wispaper.com/mac-apple-silicon',
+    macIntel: 'https://download.wispaper.com/mac-intel',
+  } as const;
 
   const toggleLanguage = () => {
     setLanguage(language === 'zh' ? 'en' : 'zh');
@@ -36,6 +42,7 @@ export function UserPanel({ onOpenInvite, onOpenPaywall, onOpenRecharge, onOpenN
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setShowUserMenu(false);
+        setShowDownloadMenu(false);
       }
     };
 
@@ -52,12 +59,13 @@ export function UserPanel({ onOpenInvite, onOpenPaywall, onOpenRecharge, onOpenN
     console.log('Logout clicked');
     // Implement logout logic here
     setShowUserMenu(false);
+    setShowDownloadMenu(false);
   };
 
-  const handleDownloadClient = () => {
-    console.log('Download client clicked');
-    // Implement download client logic here
+  const handleDownloadClient = (platform: keyof typeof downloadLinks) => {
+    window.open(downloadLinks[platform], '_blank', 'noopener,noreferrer');
     setShowUserMenu(false);
+    setShowDownloadMenu(false);
   };
 
   const handleSettings = () => {
@@ -65,12 +73,14 @@ export function UserPanel({ onOpenInvite, onOpenPaywall, onOpenRecharge, onOpenN
       onOpenSettings();
     }
     setShowUserMenu(false);
+    setShowDownloadMenu(false);
   };
 
   const handleCreditsHistory = () => {
     console.log('Credits history clicked');
     // Implement credits history logic here
     setShowUserMenu(false);
+    setShowDownloadMenu(false);
   };
 
   return (
@@ -105,7 +115,15 @@ export function UserPanel({ onOpenInvite, onOpenPaywall, onOpenRecharge, onOpenN
       <div className={`${isCollapsed ? 'px-1.5' : 'px-3'} py-3 relative`} ref={menuRef}>
         <div className="flex items-center gap-1">
           <button 
-            onClick={() => setShowUserMenu(!showUserMenu)}
+            onClick={() => {
+              setShowUserMenu((prev) => {
+                const nextValue = !prev;
+                if (!nextValue) {
+                  setShowDownloadMenu(false);
+                }
+                return nextValue;
+              });
+            }}
             className={`${isCollapsed ? 'w-10 h-10 justify-center' : 'flex-1'} flex items-center gap-2 hover:bg-gray-50 rounded-lg p-1.5 transition-colors`}
           >
             <div className="w-8 h-8 bg-gradient-to-br from-gray-700 to-gray-900 rounded-full flex items-center justify-center text-white text-xs font-medium flex-shrink-0">
@@ -200,11 +218,51 @@ export function UserPanel({ onOpenInvite, onOpenPaywall, onOpenRecharge, onOpenN
                 <span>{t('user.settings')}</span>
               </button>
 
+              <div>
+                <button
+                  onClick={() => setShowDownloadMenu((prev) => !prev)}
+                  className="w-full flex items-center justify-between gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  <span className="flex items-center gap-3">
+                    <Download className="w-4 h-4" />
+                    <span>{t('user.download')}</span>
+                  </span>
+                  {showDownloadMenu ? (
+                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                  ) : (
+                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                  )}
+                </button>
+                {showDownloadMenu ? (
+                  <div className="mx-3 mb-2 mt-1 rounded-lg border border-gray-200 bg-gray-50 p-2">
+                    <button
+                      onClick={() => handleDownloadClient('windows')}
+                      className="w-full rounded-md px-3 py-2 text-left text-sm text-gray-700 transition-colors hover:bg-white hover:text-gray-900"
+                    >
+                      {t('user.download.windows')}
+                    </button>
+                    <button
+                      onClick={() => handleDownloadClient('macApple')}
+                      className="mt-1 w-full rounded-md px-3 py-2 text-left text-sm text-gray-700 transition-colors hover:bg-white hover:text-gray-900"
+                    >
+                      {t('user.download.macApple')}
+                    </button>
+                    <button
+                      onClick={() => handleDownloadClient('macIntel')}
+                      className="mt-1 w-full rounded-md px-3 py-2 text-left text-sm text-gray-700 transition-colors hover:bg-white hover:text-gray-900"
+                    >
+                      {t('user.download.macIntel')}
+                    </button>
+                  </div>
+                ) : null}
+              </div>
+
               {/* Feedback */}
               <button 
                 onClick={() => {
                   console.log('Feedback clicked');
                   setShowUserMenu(false);
+                  setShowDownloadMenu(false);
                   setShowFeedbackModal(true);
                 }}
                 className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
@@ -221,6 +279,7 @@ export function UserPanel({ onOpenInvite, onOpenPaywall, onOpenRecharge, onOpenN
                     onClick={() => {
                       setLanguage('zh');
                       setShowUserMenu(false);
+                      setShowDownloadMenu(false);
                     }}
                     className={`flex-1 px-3 py-1.5 rounded text-xs font-medium transition-colors ${
                       language === 'zh' 
@@ -234,6 +293,7 @@ export function UserPanel({ onOpenInvite, onOpenPaywall, onOpenRecharge, onOpenN
                     onClick={() => {
                       setLanguage('en');
                       setShowUserMenu(false);
+                      setShowDownloadMenu(false);
                     }}
                     className={`flex-1 px-3 py-1.5 rounded text-xs font-medium transition-colors ${
                       language === 'en' 

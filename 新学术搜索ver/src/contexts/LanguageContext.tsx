@@ -50,6 +50,10 @@ const translations: Record<Language, Record<string, string>> = {
     // User Menu
     'user.languageSettings': '语言设置',
     'user.downloadClient': '下载客户端',
+    'user.download': '下载客户端',
+    'user.download.windows': 'Windows 版',
+    'user.download.macApple': 'mac（Apple 芯片）',
+    'user.download.macIntel': 'mac（Intel 芯片）',
     'user.settings': '我的账户',
     'user.creditsHistory': '积分记录',
     'user.logout': '退出登录',
@@ -703,7 +707,11 @@ const translations: Record<Language, Record<string, string>> = {
     
     // User Menu
     'user.languageSettings': 'Language Settings',
-    'user.downloadClient': 'Download Client',
+    'user.downloadClient': 'Download App',
+    'user.download': 'Download App',
+    'user.download.windows': 'Windows',
+    'user.download.macApple': 'macOS (Apple Silicon)',
+    'user.download.macIntel': 'macOS (Intel)',
     'user.settings': 'My Account',
     'user.creditsHistory': 'Credits History',
     'user.logout': 'Logout',
