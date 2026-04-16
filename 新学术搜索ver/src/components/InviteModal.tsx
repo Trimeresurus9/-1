@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Copy, Send, Sparkles } from 'lucide-react';
+import { X, Copy, Send, Sparkles, Share2 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface InviteModalProps {
@@ -10,17 +10,19 @@ interface InviteModalProps {
 export function InviteModal({ isOpen, onClose }: InviteModalProps) {
   const { t } = useLanguage();
   const [inviteCode, setInviteCode] = useState('');
-  const [copySuccess, setCopySuccess] = useState(false);
+  const [copiedTarget, setCopiedTarget] = useState<'link' | 'code' | null>(null);
   const [inviteCodeError, setInviteCodeError] = useState('');
 
   if (!isOpen) return null;
 
   const inviteLink = 'https://inains.art/invitation/QKH4ZUI2SQc4K';
+  const personalInviteCode = 'QKH4ZUI2SQc4K';
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(inviteLink);
-    setCopySuccess(true);
-    setTimeout(() => setCopySuccess(false), 2000);
+  const handleCopy = (target: 'link' | 'code') => {
+    const content = target === 'link' ? inviteLink : personalInviteCode;
+    navigator.clipboard.writeText(content);
+    setCopiedTarget(target);
+    setTimeout(() => setCopiedTarget(null), 2000);
   };
 
   const handleRedeemInviteCode = () => {
@@ -46,76 +48,82 @@ export function InviteModal({ isOpen, onClose }: InviteModalProps) {
       />
 
       {/* Modal */}
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-xl shadow-2xl z-50">
+      <div className="fixed top-1/2 left-1/2 z-50 w-[calc(100%-32px)] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-gray-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.16)]">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
+          className="absolute right-4 top-4 rounded-lg p-2 transition-colors hover:bg-gray-100"
         >
           <X className="w-5 h-5 text-gray-500" />
         </button>
 
         {/* Header */}
-        <div className="text-center pt-8 pb-5 px-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('invite.modalTitle')}</h2>
-          <p className="text-gray-600 text-sm leading-relaxed max-w-sm mx-auto">
+        <div className="px-7 pb-6 pt-8 text-center">
+          <h2 className="mb-3 text-[30px] font-semibold tracking-[-0.03em] text-gray-950">{t('invite.modalTitle')}</h2>
+          <p className="mx-auto max-w-md text-[15px] leading-7 text-gray-600">
             {t('invite.modalSubtitle')}
           </p>
         </div>
 
         {/* Content */}
-        <div className="px-6 pb-6 space-y-4">
-          <div className="rounded-xl border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4">
+        <div className="space-y-5 px-7 pb-7">
+          <div className="rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-sky-50 px-5 py-4">
             <div className="mb-3">
-              <h3 className="text-sm font-semibold text-gray-900">{t('invite.value.title')}</h3>
+              <h3 className="text-[13px] font-semibold tracking-[0.01em] text-gray-900">{t('invite.value.title')}</h3>
             </div>
-            <div className="space-y-3">
-              <div className="flex items-start gap-3">
+            <div className="space-y-3.5">
+              <div className="flex items-start gap-3.5">
                 <div className="mt-0.5 flex h-5 w-5 items-center justify-center text-violet-500">
-                  <Sparkles className="h-4 w-4" />
+                  <Sparkles className="h-3.5 w-3.5" />
                 </div>
-                <p className="text-sm font-medium leading-6 text-gray-900">{t('invite.value.equivalent')}</p>
+                <p className="text-[15px] font-medium leading-6 text-gray-900">{t('invite.value.equivalent')}</p>
               </div>
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-3.5">
                 <div className="mt-0.5 flex h-5 w-5 items-center justify-center text-violet-500">
-                  <Sparkles className="h-4 w-4" />
+                  <Sparkles className="h-3.5 w-3.5" />
                 </div>
-                <p className="text-sm font-medium leading-6 text-gray-900">{t('invite.value.deepSearch')}</p>
+                <p className="text-[15px] font-medium leading-6 text-gray-900">{t('invite.value.deepSearch')}</p>
               </div>
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-3.5">
                 <div className="mt-0.5 flex h-5 w-5 items-center justify-center text-violet-500">
-                  <Sparkles className="h-4 w-4" />
+                  <Sparkles className="h-3.5 w-3.5" />
                 </div>
-                <p className="text-sm font-medium leading-6 text-gray-900">{t('invite.value.agent')}</p>
+                <p className="text-[15px] font-medium leading-6 text-gray-900">{t('invite.value.agent')}</p>
               </div>
             </div>
           </div>
 
-          {/* Share Link Section */}
+          {/* Share Code Section */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {t('invite.shareLink')}
+            <label className="mb-2 block text-[11px] font-medium uppercase tracking-[0.16em] text-gray-500">
+              {t('invite.shareYourCode')}
             </label>
             <div className="flex gap-2">
-              <input
-                type="text"
-                value={inviteLink}
-                readOnly
-                className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-300 text-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-              />
+              <div className="flex min-h-[56px] flex-1 items-center justify-between rounded-2xl border border-gray-300 bg-white px-5 py-3 shadow-[0_1px_2px_rgba(15,23,42,0.03)]">
+                <div className="min-w-0">
+                  <div className="text-[24px] font-semibold tracking-[-0.03em] text-gray-950">{personalInviteCode}</div>
+                </div>
+                <button
+                  onClick={() => handleCopy('code')}
+                  className="ml-4 shrink-0 text-sm font-semibold text-cyan-500 transition-colors hover:text-cyan-600"
+                >
+                  {copiedTarget === 'code' ? t('invite.copied') : t('invite.copy')}
+                </button>
+              </div>
               <button
-                onClick={handleCopy}
-                className="flex items-center gap-2 px-4 py-2.5 bg-black hover:bg-gray-900 text-white rounded-lg transition-colors font-medium text-sm"
+                onClick={() => handleCopy('link')}
+                className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-gray-300 bg-white text-gray-600 shadow-[0_1px_2px_rgba(15,23,42,0.03)] transition-colors hover:bg-gray-50 hover:text-gray-900"
+                aria-label={t('invite.copyLink')}
+                title={t('invite.copyLink')}
               >
-                <Copy className="w-4 h-4" />
-                {copySuccess ? t('invite.copied') : t('invite.copy')}
+                {copiedTarget === 'link' ? <Copy className="h-5 w-5" /> : <Share2 className="h-5 w-5" />}
               </button>
             </div>
           </div>
 
           {/* Invite Code Section */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="mb-2 block text-[11px] font-medium uppercase tracking-[0.16em] text-gray-500">
               {t('invite.enterCode')}
             </label>
             <div className="flex gap-2">
@@ -130,36 +138,37 @@ export function InviteModal({ isOpen, onClose }: InviteModalProps) {
                 }}
                 onKeyDown={(e) => e.key === 'Enter' && handleRedeemInviteCode()}
                 placeholder={t('invite.enterCodePlaceholder')}
-                className={`flex-1 px-4 py-2.5 bg-white border text-gray-900 placeholder-gray-400 rounded-lg text-sm focus:outline-none focus:ring-2 focus:border-transparent ${
+                className={`min-h-[56px] flex-1 rounded-2xl border bg-white px-5 py-3 text-[16px] font-medium text-gray-900 placeholder:text-[15px] placeholder:font-normal placeholder:text-gray-400 shadow-[0_1px_2px_rgba(15,23,42,0.03)] focus:border-transparent focus:outline-none focus:ring-2 ${
                   inviteCodeError ? 'border-red-300 focus:ring-red-200' : 'border-gray-300 focus:ring-gray-500'
                 }`}
               />
               <button
                 onClick={handleRedeemInviteCode}
-                className="flex items-center gap-2 px-4 py-2.5 bg-black hover:bg-gray-900 text-white rounded-lg transition-colors font-medium text-sm"
+                className="flex min-h-[56px] min-w-[152px] items-center justify-center gap-2 rounded-2xl bg-black px-6 py-3 text-[15px] font-medium text-white transition-colors hover:bg-gray-900"
               >
                 <Send className="w-4 h-4" />
                 {t('invite.redeem')}
               </button>
             </div>
-            {inviteCodeError ? <p className="mt-2 text-xs text-red-500">{inviteCodeError}</p> : null}
+            {inviteCodeError ? <p className="mt-2 text-xs leading-5 text-red-500">{inviteCodeError}</p> : null}
           </div>
 
           {/* Invitation History */}
           <div className="pt-2">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-medium text-gray-700">{t('invite.history')}</h3>
+            <div className="mb-2.5 flex items-center justify-between">
+              <h3 className="text-[13px] font-medium text-gray-700">{t('invite.history')}</h3>
             </div>
 
-            <div className="bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-300 rounded-lg p-4">
-              <div className="flex items-center justify-center gap-10 mb-3">
+            <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100 px-5 py-4">
+              <div className="flex items-center justify-center gap-12">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900 mb-0.5">0</div>
-                  <div className="text-xs text-gray-600">{t('credits')}</div>
+                  <div className="mb-1 text-[28px] font-semibold tracking-[-0.03em] text-gray-950">0</div>
+                  <div className="text-[12px] text-gray-600">{t('credits')}</div>
                 </div>
+                <div className="h-10 w-px bg-gray-200" />
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900 mb-0.5">0</div>
-                  <div className="text-xs text-gray-600">{t('invite.referrals')}</div>
+                  <div className="mb-1 text-[28px] font-semibold tracking-[-0.03em] text-gray-950">0</div>
+                  <div className="text-[12px] text-gray-600">{t('invite.referrals')}</div>
                 </div>
               </div>
 
