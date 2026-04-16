@@ -10,6 +10,7 @@ import { HomeFaqSection } from './HomeFaqSection';
 import { HomeSearchLanding } from './HomeSearchLanding';
 import { LogoLoop } from './LogoLoop';
 import { MarketingSeoPage } from './MarketingSeoPage';
+import { TranslationLandingPage } from './TranslationLandingPage';
 import { cn } from './ui/utils';
 
 const navItemClass = cn(
@@ -27,6 +28,7 @@ type MarketingPageKey =
   | 'pricing'
   | 'privacy-policy'
   | 'scholar-qa'
+  | 'agent'
   | 'library'
   | 'paperclaw'
   | 'idea-discovery'
@@ -34,6 +36,7 @@ type MarketingPageKey =
   | 'truecite'
   | 'ai-feeds'
   | 'ai-survey'
+  | 'surveys'
   | 'blog'
   | 'terms-of-use'
   | 'translation'
@@ -64,17 +67,19 @@ interface PageConfig {
 
 const featureMenuItems: Array<{ key: MarketingPageKey; label: string }> = [
   { key: 'scholar-qa', label: 'Scholar QA' },
+  { key: 'agent', label: 'Agent' },
   { key: 'library', label: 'Library' },
   { key: 'paperclaw', label: 'PaperClaw' },
   { key: 'idea-discovery', label: 'Idea Discovery' },
   { key: 'projects', label: 'Projects' },
-  { key: 'ai-feeds', label: 'AI Feeds' },
   { key: 'ai-survey', label: 'AI Survey' },
+  { key: 'translation', label: 'Translation' },
+  { key: 'ai-feeds', label: 'AI Feeds' },
 ];
 
 const resourceMenuItems: Array<{ key: MarketingPageKey; label: string }> = [
+  { key: 'surveys', label: 'Surveys' },
   { key: 'blog', label: 'Blog' },
-  { key: 'translation', label: 'Translation' },
   { key: 'faq', label: 'FAQ' },
 ];
 
@@ -164,6 +169,15 @@ export function HomePage({ onNavigateToWorkspace, onNavigate, onOpenPricing, onS
         <div className="space-y-8">
           <HomeFaqSection language={language} />
         </div>
+      );
+    }
+
+    if (page === 'translation') {
+      return (
+        <TranslationLandingPage
+          language={language}
+          onPrimaryAction={onNavigateToWorkspace}
+        />
       );
     }
 
@@ -262,6 +276,30 @@ export function HomePage({ onNavigateToWorkspace, onNavigate, onOpenPricing, onS
         primaryLabel: '打开 Scholar QA',
         secondaryLabel: '回到首页',
         onPrimaryAction: () => onNavigate?.('scholar-qa'),
+        onSecondaryAction: () => setActivePage('home'),
+      },
+      agent: {
+        badge: 'Feature',
+        title: 'Agent: 为复杂科研任务设计的学术 Agent 工作流',
+        subtitle: '当简单搜索不够时，Agent 帮你把检索、追问、整理和判断串成连续的研究动作。',
+        description: 'Agent 页承担功能介绍角色，用来说明 WisPaper 中的学术 Agent 如何服务复杂研究任务，而不是只做一次性论文搜索。',
+        titleTag: 'Agent | WisPaper Feature',
+        metaDescription: '了解 WisPaper Agent：面向复杂科研任务的学术 Agent，可用于检索推进、资料整理、related work 分析与研究判断。',
+        pills: ['学术Agent', 'Research workflow', 'Task orchestration'],
+        overview: [
+          { title: '从搜索走向多步任务', body: '不只是找论文，而是继续推进追问、筛选、整理与判断。' },
+          { title: '适合复杂研究问题', body: '尤其适合需要多轮检索、比较和上下文保持的场景。' },
+          { title: '把零散动作连成流程', body: '帮助用户减少在多个工具之间来回切换。' },
+        ],
+        highlights: [
+          { title: '强化 WisPaper 的 Agent 能力叙事', body: '让功能入口和产品定位保持一致。' },
+          { title: '适合承接学术 Agent 相关搜索词', body: '把 Agent 解释成科研任务工具，而不是抽象概念。' },
+          { title: '与 Search、QA、Survey 串联', body: 'Agent 更像整条工作流的协调层。' },
+          { title: 'CTA 回到真实产品', body: '看完介绍后可以继续进入工作区。' },
+        ],
+        primaryLabel: '进入 WisPaper',
+        secondaryLabel: '回到首页',
+        onPrimaryAction: onNavigateToWorkspace,
         onSecondaryAction: () => setActivePage('home'),
       },
       library: {
@@ -409,23 +447,47 @@ export function HomePage({ onNavigateToWorkspace, onNavigate, onOpenPricing, onS
         onSecondaryAction: () => setActivePage('home'),
       },
       'ai-survey': {
-        badge: 'Resources',
-        title: 'AI Survey: 从搜索结果进入结构化综述工作流',
-        subtitle: '把分散的搜索结果继续组织成主题分组、方法路线、数据集对比和研究空白。',
-        description: 'AI Survey 是资源型工作流页，适合承接 literature review tool、survey workflow、related work organization 等搜索意图。',
-        titleTag: 'AI Survey | WisPaper Resources',
-        metaDescription: '了解 WisPaper AI Survey：将 Scholar Search 结果继续组织成结构化文献综述与 related work 工作流。',
-        pills: ['Survey workflow', 'Literature review', 'Research organization'],
+        badge: 'Feature',
+        title: 'AI Survey: 将搜索结果转成结构化综述能力',
+        subtitle: '把分散的搜索结果继续组织成主题分组、方法路线、数据集对比和研究空白，作为 Search 之后的核心功能介绍。',
+        description: 'AI Survey 在 Feature 中承担功能解释角色，说明它如何把 Scholar Search 的结果继续推进成综述、related work 和研究判断。',
+        titleTag: 'AI Survey | WisPaper Feature',
+        metaDescription: '了解 WisPaper AI Survey：将 Scholar Search 结果继续组织成结构化文献综述、related work 与研究缺口分析功能。',
+        pills: ['AI Survey', 'Literature review', 'Research organization'],
         overview: [
           { title: '搜索之后的自然下一步', body: '不是和 Search 并列，而是 Search 的延长线。' },
-          { title: '更适合综述型任务', body: '帮助用户从论文列表推进到结构化理解。' },
+          { title: '把结果组织成综述框架', body: '帮助用户从论文列表推进到结构化理解与比较。' },
           { title: '适合高意图科研用户', body: '尤其适合研究生、博士和实验室成员。' },
         ],
         highlights: [
-          { title: '承接首页中最重要的 workflow narrative', body: '让 Search 不只是搜索，而是一个工作流起点。' },
-          { title: '资源页承担解释任务', body: '把 Survey 的价值讲成用户任务和结果。' },
-          { title: '也适合 comparison 与 use case 内链', body: '方便后续扩展更完整的信息架构。' },
+          { title: '作为 Feature 解释真实能力', body: '把 Survey 的价值讲成用户任务和结果。' },
+          { title: '承接首页中的 workflow narrative', body: '让 Search 不只是搜索，而是一个工作流起点。' },
+          { title: '适合与 Search、QA、Library 串联', body: '帮助整条研究路径更完整。' },
           { title: 'CTA 进入真实 AI Survey 场景', body: '用户看完可以直达工作区。' },
+        ],
+        primaryLabel: '进入 AI Survey',
+        secondaryLabel: '回到首页',
+        onPrimaryAction: onNavigateToWorkspace,
+        onSecondaryAction: () => setActivePage('home'),
+      },
+      surveys: {
+        badge: 'Resources',
+        title: 'Surveys: 展示 AI Survey 生成案例与结构化综述示例',
+        subtitle: '通过案例展示主题分组、方法图谱、数据集对比与研究空白分析，让用户更快理解 Survey 输出长什么样。',
+        description: 'Surveys 放在 Resources 下，承担案例展示和 use case 说明，不与 Feature 中的 AI Survey 功能介绍混用。',
+        titleTag: 'Surveys | WisPaper Resources',
+        metaDescription: '查看 WisPaper Surveys：展示 AI Survey 的结构化综述案例、related work 组织方式与研究缺口分析示例。',
+        pills: ['Survey cases', 'Use cases', 'Related work examples'],
+        overview: [
+          { title: '展示真实输出样式', body: '帮助用户快速理解 AI Survey 的结果呈现方式。' },
+          { title: '适合案例与 use case 承接', body: '比功能说明更偏向结果展示和参考样例。' },
+          { title: '服务内容与 SEO 承接', body: '适合沉淀 long-tail 搜索流量与案例入口。' },
+        ],
+        highlights: [
+          { title: '与 Feature 中的 AI Survey 区分清楚', body: '一个讲功能，一个讲案例。' },
+          { title: '便于扩展更多专题展示页', body: '后续可以持续增加不同领域的 Survey 示例。' },
+          { title: '适合 comparison 与 blog 内链', body: '作为资源页承接更自然。' },
+          { title: 'CTA 返回真实产品', body: '用户看完案例后仍可直接进入工作区。' },
         ],
         primaryLabel: '进入 AI Survey',
         secondaryLabel: '回到首页',

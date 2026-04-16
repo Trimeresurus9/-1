@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { X, Copy, Send, HandHeart, ChevronRight } from 'lucide-react';
-import { isValidEmail } from '../utils/email';
+import { X, Copy, Send, Sparkles } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface InviteModalProps {
   isOpen: boolean;
@@ -8,9 +8,10 @@ interface InviteModalProps {
 }
 
 export function InviteModal({ isOpen, onClose }: InviteModalProps) {
-  const [email, setEmail] = useState('');
+  const { t } = useLanguage();
+  const [inviteCode, setInviteCode] = useState('');
   const [copySuccess, setCopySuccess] = useState(false);
-  const [emailError, setEmailError] = useState('');
+  const [inviteCodeError, setInviteCodeError] = useState('');
 
   if (!isOpen) return null;
 
@@ -22,23 +23,18 @@ export function InviteModal({ isOpen, onClose }: InviteModalProps) {
     setTimeout(() => setCopySuccess(false), 2000);
   };
 
-  const handleSendEmail = () => {
-    const nextEmail = email.trim();
-    if (!nextEmail) {
-      setEmailError('Please enter an email address');
+  const handleRedeemInviteCode = () => {
+    const nextInviteCode = inviteCode.trim();
+    if (!nextInviteCode) {
+      setInviteCodeError(t('invite.codeRequired'));
       return;
     }
 
-    if (!isValidEmail(nextEmail)) {
-      setEmailError('Please enter a valid email address');
-      return;
-    }
-
-    // Handle email sending logic
-    console.log('Sending invitation to:', nextEmail);
-    setEmail('');
-    setEmailError('');
-    alert('Invitation sent!');
+    // Handle invitation code redeem logic
+    console.log('Redeeming invitation code:', nextInviteCode);
+    setInviteCode('');
+    setInviteCodeError('');
+    alert(t('invite.redeemedSuccess'));
   };
 
   return (
@@ -60,24 +56,45 @@ export function InviteModal({ isOpen, onClose }: InviteModalProps) {
         </button>
 
         {/* Header */}
-        <div className="text-center pt-8 pb-6 px-6">
-          <div className="flex justify-center mb-4">
-            <div className="w-14 h-14 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center border-2 border-gray-400">
-              <HandHeart className="w-7 h-7 text-gray-900" />
-            </div>
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Invite to get credits</h2>
-          <p className="text-gray-600 text-sm">
-            Share your invitation link with friends, get 500 credits each
+        <div className="text-center pt-8 pb-5 px-6">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('invite.modalTitle')}</h2>
+          <p className="text-gray-600 text-sm leading-relaxed max-w-sm mx-auto">
+            {t('invite.modalSubtitle')}
           </p>
         </div>
 
         {/* Content */}
         <div className="px-6 pb-6 space-y-4">
+          <div className="rounded-xl border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4">
+            <div className="mb-3">
+              <h3 className="text-sm font-semibold text-gray-900">{t('invite.value.title')}</h3>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5 flex h-5 w-5 items-center justify-center text-violet-500">
+                  <Sparkles className="h-4 w-4" />
+                </div>
+                <p className="text-sm font-medium leading-6 text-gray-900">{t('invite.value.equivalent')}</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5 flex h-5 w-5 items-center justify-center text-violet-500">
+                  <Sparkles className="h-4 w-4" />
+                </div>
+                <p className="text-sm font-medium leading-6 text-gray-900">{t('invite.value.deepSearch')}</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5 flex h-5 w-5 items-center justify-center text-violet-500">
+                  <Sparkles className="h-4 w-4" />
+                </div>
+                <p className="text-sm font-medium leading-6 text-gray-900">{t('invite.value.agent')}</p>
+              </div>
+            </div>
+          </div>
+
           {/* Share Link Section */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Share your invitation link
+              {t('invite.shareLink')}
             </label>
             <div className="flex gap-2">
               <input
@@ -91,87 +108,61 @@ export function InviteModal({ isOpen, onClose }: InviteModalProps) {
                 className="flex items-center gap-2 px-4 py-2.5 bg-black hover:bg-gray-900 text-white rounded-lg transition-colors font-medium text-sm"
               >
                 <Copy className="w-4 h-4" />
-                {copySuccess ? 'Copied!' : 'Copy'}
+                {copySuccess ? t('invite.copied') : t('invite.copy')}
               </button>
             </div>
           </div>
 
-          {/* Email Section */}
+          {/* Invite Code Section */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Email your invitation
+              {t('invite.enterCode')}
             </label>
             <div className="flex gap-2">
               <input
-                type="email"
-                value={email}
+                type="text"
+                value={inviteCode}
                 onChange={(e) => {
-                  const nextEmail = e.target.value;
-                  setEmail(nextEmail);
-                  if (!nextEmail.trim() || isValidEmail(nextEmail)) {
-                    setEmailError('');
+                  setInviteCode(e.target.value);
+                  if (e.target.value.trim()) {
+                    setInviteCodeError('');
                   }
                 }}
-                onBlur={() => {
-                  if (email.trim() && !isValidEmail(email)) {
-                    setEmailError('Please enter a valid email address');
-                  }
-                }}
-                onKeyDown={(e) => e.key === 'Enter' && handleSendEmail()}
-                placeholder="Enter email address"
+                onKeyDown={(e) => e.key === 'Enter' && handleRedeemInviteCode()}
+                placeholder={t('invite.enterCodePlaceholder')}
                 className={`flex-1 px-4 py-2.5 bg-white border text-gray-900 placeholder-gray-400 rounded-lg text-sm focus:outline-none focus:ring-2 focus:border-transparent ${
-                  emailError ? 'border-red-300 focus:ring-red-200' : 'border-gray-300 focus:ring-gray-500'
+                  inviteCodeError ? 'border-red-300 focus:ring-red-200' : 'border-gray-300 focus:ring-gray-500'
                 }`}
               />
               <button
-                onClick={handleSendEmail}
+                onClick={handleRedeemInviteCode}
                 className="flex items-center gap-2 px-4 py-2.5 bg-black hover:bg-gray-900 text-white rounded-lg transition-colors font-medium text-sm"
               >
                 <Send className="w-4 h-4" />
-                Send
+                {t('invite.redeem')}
               </button>
             </div>
-            {emailError ? <p className="mt-2 text-xs text-red-500">{emailError}</p> : null}
+            {inviteCodeError ? <p className="mt-2 text-xs text-red-500">{inviteCodeError}</p> : null}
           </div>
 
           {/* Invitation History */}
-          <div className="pt-4">
+          <div className="pt-2">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-medium text-gray-700">Invitation History</h3>
+              <h3 className="text-sm font-medium text-gray-700">{t('invite.history')}</h3>
             </div>
 
-            <div className="bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-300 rounded-lg p-6">
-              <div className="flex items-center justify-center gap-12 mb-4">
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-300 rounded-lg p-4">
+              <div className="flex items-center justify-center gap-10 mb-3">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-gray-900 mb-1">0</div>
-                  <div className="text-xs text-gray-600">Credits</div>
+                  <div className="text-2xl font-bold text-gray-900 mb-0.5">0</div>
+                  <div className="text-xs text-gray-600">{t('credits')}</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-gray-900 mb-1">0</div>
-                  <div className="text-xs text-gray-600">Referrals</div>
+                  <div className="text-2xl font-bold text-gray-900 mb-0.5">0</div>
+                  <div className="text-xs text-gray-600">{t('invite.referrals')}</div>
                 </div>
               </div>
 
-              <div className="flex justify-center mb-6">
-                <div className="w-20 h-20 bg-white bg-opacity-60 rounded-full flex items-center justify-center border-2 border-gray-400">
-                  <svg className="w-10 h-10 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <circle cx="9" cy="7" r="4" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <button className="text-sm text-gray-900 hover:text-black font-medium transition-colors">
-                  Redeem
-                </button>
-                <button className="flex items-center gap-1 text-sm text-gray-900 hover:text-black font-medium transition-colors">
-                  <span>Invitation history</span>
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
             </div>
           </div>
         </div>

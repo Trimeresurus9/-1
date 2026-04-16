@@ -595,7 +595,7 @@ export function HomeSearchLanding({
               <span>Scholar Search</span>
             </div>
             <h1 className="mt-5 min-h-[3.5rem] text-4xl font-bold tracking-tight text-slate-950 md:min-h-[4rem] md:text-5xl">
-              {isZh ? 'WisPaper: 用更聪明的方式开始学术搜索' : 'WisPaper: Start your academic search more intelligently'}
+              {isZh ? 'WisPaper: 用更聪明的方式开始学术搜索' : 'WisPaper: Start yoursearch more intelligently'}
             </h1>
             <p className="mx-auto mt-4 max-w-3xl text-lg leading-8 text-slate-600">
               {isZh
@@ -1013,39 +1013,6 @@ export function HomeSearchLanding({
               ))}
             </div>
           </div>
-        </div>
-      </section>
-      ) : null}
-
-      {isSearchMode ? (
-      <section id="comparison" className="bg-[linear-gradient(180deg,rgba(248,250,252,0.92),rgba(241,245,249,0.78))] px-6 py-14 md:px-10 md:py-16">
-        <div className="mx-auto max-w-6xl">
-        <div className="max-w-3xl">
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">
-            {isZh ? 'WisPaper 与 Google Scholar 有什么不同？' : 'How is WisPaper different from Google Scholar?'}
-          </h2>
-        </div>
-        <div className="mt-8 overflow-hidden border border-slate-200 bg-white">
-          <div className="grid grid-cols-[1.3fr_0.8fr_0.9fr] border-b border-slate-200 bg-slate-100 px-5 py-4 text-sm font-semibold text-slate-700">
-            <span>{isZh ? '对比维度' : 'Dimension'}</span>
-            <span>Scholar Search</span>
-            <span>{isZh ? '传统搜索' : 'Traditional search'}</span>
-          </div>
-          {comparisonRows.map((row) => (
-            <div key={row.enLabel} className="grid grid-cols-[1.3fr_0.8fr_0.9fr] gap-4 border-t border-slate-200 px-5 py-4 text-sm text-slate-700">
-              <span className="font-medium text-slate-900">{isZh ? row.zhLabel : row.enLabel}</span>
-              <span>{isZh ? row.zhLeft : row.enLeft}</span>
-              <span>{isZh ? row.zhRight : row.enRight}</span>
-            </div>
-          ))}
-        </div>
-        <div className="mt-8 flex flex-col gap-5">
-          <p className="max-w-4xl text-base leading-7 text-slate-600">
-            {isZh
-              ? '如果你的目标是快速定位一篇已知论文，传统搜索已经足够。但如果你的目标是做综述、筛论文、比较方法、找研究空白，Scholar Search 会更接近真实科研工作流。'
-              : 'If your goal is to quickly locate a known paper, traditional search is often enough. But if you want to review literature, filter papers, compare methods, and discover research gaps, Scholar Search is closer to a real research workflow.'}
-          </p>
-        </div>
         </div>
       </section>
       ) : null}

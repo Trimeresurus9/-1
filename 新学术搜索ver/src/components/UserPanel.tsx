@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Globe, Bell, Settings, Gift, ArrowRight, Users, User, Download, LogOut, ChevronRight, Mail, Coins, HelpCircle, Crown, UserPlus, MessageSquare, X } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { FeedbackModal } from './FeedbackModal';
+import { ShinyText } from './ShinyText';
 
 interface UserPanelProps {
   onOpenInvite?: () => void;
@@ -94,7 +95,7 @@ export function UserPanel({ onOpenInvite, onOpenPaywall, onOpenRecharge, onOpenN
             className="w-full flex items-center justify-center gap-1 px-3 py-1.5 bg-black hover:bg-gray-900 text-white text-xs font-medium rounded transition-colors"
             onClick={onOpenInvite}
           >
-            <span>{t('invite.action')}</span>
+            <ShinyText text={t('invite.action')} className="inline-block" />
             <ArrowRight className="w-3 h-3" />
           </button>
         </div>
