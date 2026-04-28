@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { BookOpen, Search, MessageSquare, Library, Rss, Clock, Plus, Home, ChevronDown, ArrowRight, FlaskConical, GraduationCap, Lightbulb, PanelLeftClose, PanelLeftOpen, MoreHorizontal } from 'lucide-react';
+import { Search, MessageSquare, Library, Rss, Clock, Plus, ChevronDown, ArrowRight, FlaskConical, GraduationCap, Lightbulb, PanelLeftClose, PanelLeftOpen, MoreHorizontal } from 'lucide-react';
 import { UserPanel } from './UserPanel';
 import { useLanguage } from '../contexts/LanguageContext';
 import { SettingsModal } from './SettingsModal';
@@ -527,25 +527,7 @@ export function LeftSidebar({ onNavigate, onOpenInvite, onOpenPaywall, onOpenRec
         onOpenSettings={() => setShowSettingsModal(true)}
         isCollapsed={isCollapsed}
       />
-      
-      {/* Bottom Controls - Only show when Scholar QA is active and not collapsed */}
-      {activeNav === 'scholar-qa' && !isCollapsed && (
-        <div className="px-3 py-3 border-t border-gray-100 flex items-center gap-2">
-          <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center flex-shrink-0">
-            <BookOpen className="w-4 h-4 text-white" />
-          </div>
-          <div className="flex-1 flex items-center">
-            <button className="flex items-center gap-1 px-2 py-1 text-sm text-gray-600 hover:bg-gray-50 rounded transition-colors">
-              <span>English (EN)</span>
-              <ChevronDown className="w-3 h-3" />
-            </button>
-          </div>
-          <button className="p-1.5 text-gray-600 hover:bg-gray-50 rounded transition-colors">
-            <Home className="w-4 h-4" />
-          </button>
-        </div>
-      )}
-      
+
       {/* Settings Modal */}
       <SettingsModal 
         isOpen={showSettingsModal} 

@@ -369,8 +369,8 @@ export function HomeSearchLanding({
   const [expandedSearchFaqIndexes, setExpandedSearchFaqIndexes] = React.useState<number[]>([0]);
   const isZh = language === 'zh';
   const isSearchMode = mode === 'search';
-  const homeTitle = 'WisPaper: Your AI Academic Search Engine';
-  const homeDescription = 'Complete literature discovery, deep reading, analysis, and knowledge-base building in one AI workspace, reducing days of research to minutes.';
+  const homeTitle = 'WisPaper: Reshape your research workflow from discovery to experimentation';
+  const homeDescription = 'Complete literature discovery, knowledge capture, and agent-driven experimentation in one workspace, reducing days of research work to minutes.';
 
   const handleLandingSearch = React.useCallback(() => {
     if (landingSearchQuery.trim()) {
@@ -436,7 +436,7 @@ export function HomeSearchLanding({
           <div className="mx-auto max-w-4xl text-center">
             <div className="mb-5 inline-flex min-h-10 items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-4 py-2 text-sm font-medium text-cyan-900">
               <Sparkles className="h-4 w-4" />
-              <span>{isZh ? '面向学术界的全链路科研加速器' : 'The world-leading end-to-end research accelerator'}</span>
+              <span>{isZh ? '面向学术界的全链路AI科研加速器' : 'The world-leading end-to-end research accelerator'}</span>
             </div>
 
             <h1 className="mx-auto min-h-[5.5rem] max-w-4xl text-4xl font-black tracking-tight leading-[1.05] text-slate-950 md:min-h-[8.5rem] md:text-6xl">
@@ -444,7 +444,7 @@ export function HomeSearchLanding({
                 <span className="flex flex-col items-center leading-[1.05]">
                   <span>WisPaper:</span>
                   <TextType
-                    text="你的AI 学术搜索引擎"
+                    text="从检索到实验，重塑你的科研工作流"
                     typingSpeed={48}
                     startDelay={220}
                     className="mt-1 block"
@@ -454,7 +454,7 @@ export function HomeSearchLanding({
                 <span className="flex flex-col items-center leading-[1.05]">
                   <span>WisPaper:</span>
                   <TextType
-                    text="Your AI Academic Search Engine"
+                    text="Your AI Academic Agent"
                     typingSpeed={48}
                     startDelay={220}
                     className="mt-1 block"
@@ -464,8 +464,8 @@ export function HomeSearchLanding({
             </h1>
             <p className="mx-auto mt-4 min-h-[4rem] max-w-3xl text-xl leading-8 text-slate-700 md:min-h-[5rem]">
               {isZh
-                ? '助你一站式完成文献查找、精读分析与知识库搭建，将数天的调研工作量缩减至分钟级。'
-                : 'Complete literature discovery, deep reading, analysis, and knowledge-base building in one AI workspace, reducing days of research to minutes.'}
+                ? '一站式完成文献查找、知识沉淀与Agent实验，将数天的调研工作量缩减至分钟级。'
+                : 'Complete literature discovery, knowledge capture, and agent-driven experimentation in one workspace, reducing days of research work to minutes.'}
             </p>
             <div className="mx-auto mt-6 w-full max-w-3xl rounded-2xl border border-gray-200 bg-white p-2 shadow-sm">
               <div className="flex items-center gap-2">
@@ -536,7 +536,7 @@ export function HomeSearchLanding({
           <div className="mx-auto mt-14 max-w-[88rem]">
             <div className="mx-auto max-w-3xl text-center">
               <h2 className="min-h-[4rem] text-3xl font-bold tracking-tight text-slate-950 md:min-h-[5rem] md:text-4xl">
-                {isZh ? '不止搜索，更是一整套科研工作流' : 'More than search, a complete research workflow'}
+                {isZh ? 'All-in-one 科研工作流' : 'All-in-one AI workflow'}
               </h2>
               <p className="mt-4 min-h-[3.5rem] text-base leading-7 text-slate-600 md:min-h-[3.75rem]">
                 {isZh

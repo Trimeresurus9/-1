@@ -10,33 +10,33 @@ interface TranslationLandingPageProps {
 
 const featureCards = [
   {
-    icon: PanelsLeftRight,
-    zhEyebrow: '对照模式',
-    enEyebrow: 'Compare mode',
-    zhTitle: '左右对比模式',
-    enTitle: 'Side-by-side bilingual reading',
-    zhBody: '原文与译文并排展示，阅读时可以同步比对句式、术语和上下文，不需要频繁来回切换。',
-    enBody: 'Read the source and translation side by side so you can compare wording, terminology, and context without constant switching.',
+    icon: Languages,
+    zhEyebrow: '多维翻译',
+    enEyebrow: 'Multi-layer translation',
+    zhTitle: '全文翻译与划词解释',
+    enTitle: 'Full-text translation and inline explanation',
+    zhBody: '支持全文中英互译、划词翻译与术语解释，遇到生涩表述和专业概念时可以直接在阅读过程中完成理解。',
+    enBody: 'Translate full papers, translate selected passages, and explain technical terms inline so difficult concepts can be understood without leaving the reading flow.',
     preview: 'split',
   },
   {
-    icon: ArrowLeftRight,
-    zhEyebrow: '双向跳转',
-    enEyebrow: 'Bidirectional jump',
-    zhTitle: '原文译文双向跳转',
-    enTitle: 'Jump between source and translation',
-    zhBody: '点击原文或译文中的任意句段，即可快速定位对应内容，特别适合校对、精读和术语核查。',
-    enBody: 'Click any sentence in the source or translation to jump to its counterpart, which is ideal for checking, close reading, and terminology review.',
+    icon: PanelsLeftRight,
+    zhEyebrow: '沉浸批注',
+    enEyebrow: 'Immersive annotation',
+    zhTitle: 'PDF 高亮与墨迹批注',
+    enTitle: 'PDF highlighting and ink annotation',
+    zhBody: '在阅读关键论文时直接高亮核心观点、添加墨迹批注与阅读记录，把精读过程沉淀成可回看的个人知识记忆。',
+    enBody: 'Highlight key passages, add ink annotations, and preserve reading traces directly in PDFs so close reading turns into reusable personal knowledge.',
     preview: 'jump',
   },
   {
-    icon: Languages,
-    zhEyebrow: '五种语言',
-    enEyebrow: 'Five languages',
-    zhTitle: '五种语言支持',
-    enTitle: 'Support for five languages',
-    zhBody: '支持中文、英文、日文、韩文和印尼语，方便不同语言背景的用户共享同一份内容。',
-    enBody: 'Supports Chinese, English, Japanese, Korean, and Bahasa Indonesia so teams can read and share the same content across languages.',
+    icon: ArrowLeftRight,
+    zhEyebrow: 'LaTeX 提取',
+    enEyebrow: 'LaTeX extraction',
+    zhTitle: '公式与表格一键转 LaTeX',
+    enTitle: 'One-click LaTeX for formulas and tables',
+    zhBody: '复杂公式和数据表格可直接提取为 LaTeX 代码，减少手工重敲与排版错误，让论文写作和实验记录更高效。',
+    enBody: 'Convert formulas and tables into LaTeX with one click so you can avoid manual retyping and move faster in writing and experiment documentation.',
     preview: 'languages',
   },
 ];
@@ -47,11 +47,11 @@ export function TranslationLandingPage({
 }: TranslationLandingPageProps) {
   const isZh = language === 'zh';
   const titleTag = isZh
-    ? 'Translation - 学术论文翻译、双语对照阅读与论文精读工具 | WisPaper'
-    : 'Translation - Academic Paper Translation and Bilingual Reading Tool | WisPaper';
+    ? 'AI 辅助阅读 - 翻译、批注与 LaTeX 提取 | WisPaper'
+    : 'AI-Assisted Reading - Translation, Annotation, and LaTeX Extraction | WisPaper';
   const metaDescription = isZh
-    ? 'WisPaper Translation 提供学术论文翻译、双语对照阅读、术语核查与跨语言定位能力，适合作为论文精读工具、文献综述工具和学术阅读辅助入口。'
-    : 'WisPaper Translation supports academic paper translation, bilingual side-by-side reading, term checking, and cross-language navigation for deep paper reading and review workflows.';
+    ? 'WisPaper AI 辅助阅读支持全文翻译、划词解释、PDF 高亮批注以及公式表格转 LaTeX，帮助你更高效地完成论文精读与知识沉淀。'
+    : 'WisPaper AI-Assisted Reading supports full-text translation, inline explanation, PDF annotation, and one-click LaTeX extraction for faster deep reading and knowledge capture.';
 
   React.useEffect(() => {
     document.title = titleTag;
@@ -83,15 +83,15 @@ export function TranslationLandingPage({
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.12),_transparent_30%),radial-gradient(circle_at_80%_18%,_rgba(59,130,246,0.12),_transparent_28%),linear-gradient(180deg,_rgba(255,255,255,0.94),_rgba(248,250,252,0.98))]" />
         <div className="relative mx-auto max-w-5xl text-center">
           <div className="mb-5 inline-flex items-center rounded-full border border-cyan-200 bg-cyan-50 px-4 py-2 text-sm font-medium text-cyan-900">
-            Translation
+            {isZh ? 'AI 辅助阅读' : 'AI-Assisted Reading'}
           </div>
           <h1 className="mx-auto max-w-4xl text-4xl font-black tracking-tight text-slate-950 md:text-6xl">
-            {isZh ? '沉浸式的翻译阅读体验' : 'An immersive translation reading experience'}
+            {isZh ? '沉浸式的智能文献阅读体验' : 'An immersive intelligent literature reading experience'}
           </h1>
           <p className="mx-auto mt-4 max-w-3xl text-xl leading-8 text-slate-700">
             {isZh
-              ? '围绕双语阅读、对照理解和跨语言定位而设计，让译文阅读、论文精读和术语核查更顺手。'
-              : 'Designed for bilingual reading, cross-language understanding, and fast alignment so translation, close reading, and term checking feel more natural.'}
+              ? '支持全文翻译、划词解释、PDF 批注、核心内容提炼以及公式表格转 LaTeX，让跨语言阅读与深度精读更顺滑。'
+              : 'Built for full-text translation, inline explanation, PDF annotation, content extraction, and LaTeX conversion so multilingual close reading becomes much smoother.'}
           </p>
           <div className="mt-8 flex justify-center">
             <button
@@ -108,7 +108,7 @@ export function TranslationLandingPage({
       <section className="bg-[linear-gradient(180deg,_rgba(239,249,255,0.72),_rgba(255,255,255,1))] px-8 py-14 md:px-10 md:py-16">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-3xl font-black tracking-tight text-slate-950 md:text-5xl">
-            {isZh ? '功能特色' : 'Core Features'}
+            {isZh ? '核心能力' : 'Core Capabilities'}
           </h2>
         </div>
 
@@ -157,7 +157,7 @@ export function TranslationLandingPage({
                         <ArrowLeftRight className="h-5 w-5" />
                       </div>
                       <div className="rounded-[1.6rem] bg-slate-50 p-4 text-center">
-                        <p className="text-lg font-semibold text-slate-700">{isZh ? '译文' : 'Translation'}</p>
+                        <p className="text-lg font-semibold text-slate-700">{isZh ? '解释 / 译文' : 'Explanation / Translation'}</p>
                         <div className="mt-4 space-y-3">
                           <div className="h-3 rounded-full bg-slate-200" />
                           <div className="h-3 w-5/6 rounded-full bg-slate-200" />
@@ -173,7 +173,7 @@ export function TranslationLandingPage({
                     <div className="mx-auto flex w-fit items-center gap-4 rounded-full bg-white px-4 py-3 shadow-[0_12px_28px_-18px_rgba(15,23,42,0.18)]">
                       <span className="rounded-2xl bg-slate-50 px-5 py-3 text-xl font-semibold text-slate-700">A12</span>
                       <span className="rounded-full bg-slate-900 px-5 py-3 text-lg font-semibold text-white">
-                        {isZh ? '双向定位' : 'Jump'}
+                        {isZh ? '批注模式' : 'Annotate'}
                       </span>
                       <span className="rounded-2xl bg-slate-50 px-5 py-3 text-xl font-semibold text-slate-700">B12</span>
                     </div>
@@ -183,8 +183,8 @@ export function TranslationLandingPage({
                 {card.preview === 'languages' ? (
                   <div className="mt-8 flex flex-wrap justify-center gap-3">
                     {(isZh
-                      ? ['中文', 'English', '日本語', '한국어', 'Bahasa Indonesia']
-                      : ['Chinese', 'English', '日本語', '한국어', 'Bahasa Indonesia']
+                      ? ['公式', '表格', 'LaTeX', '笔记', '论文']
+                      : ['Formula', 'Table', 'LaTeX', 'Notes', 'Paper']
                     ).map((item) => (
                       <span key={item} className="rounded-full border border-cyan-200 bg-white px-4 py-2 text-lg font-medium text-[#275df0]">
                         {item}
@@ -201,12 +201,12 @@ export function TranslationLandingPage({
       <section className="bg-white px-8 py-14 md:px-10 md:py-16">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-3xl font-black tracking-tight text-slate-950 md:text-4xl">
-            {isZh ? '让翻译阅读真正服务于论文理解' : 'Make translation serve paper understanding'}
+            {isZh ? '让阅读辅助真正服务于论文理解与写作' : 'Make reading assistance serve understanding and writing'}
           </h2>
           <p className="mx-auto mt-4 max-w-3xl text-base leading-8 text-slate-600">
             {isZh
-              ? 'Translation 不只是把原文转成另一种语言，而是帮助你在学术论文翻译、论文精读工具和文献综述工具之间建立更顺畅的阅读路径。先搜索，再对照阅读，再继续判断与沉淀。'
-              : 'Translation is not just about converting text into another language. It helps connect academic paper translation, close reading, and literature review workflows into one smoother path.'}
+              ? 'AI 辅助阅读不只是把原文翻译成另一种语言，而是把翻译、解释、批注和 LaTeX 提取连接成一条连续的阅读与写作工作流。先检索，再精读，再沉淀，再进入论文写作与实验准备。'
+              : 'AI-Assisted Reading is not just about translating text. It connects translation, explanation, annotation, and LaTeX extraction into one continuous workflow for reading, synthesis, writing, and experiment preparation.'}
           </p>
           <div className="mt-8 flex justify-center">
             <button
@@ -214,7 +214,7 @@ export function TranslationLandingPage({
               onClick={onPrimaryAction}
               className="inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
             >
-              <span>{isZh ? '开始翻译阅读' : 'Start Reading with Translation'}</span>
+              <span>{isZh ? '开始 AI 辅助阅读' : 'Start AI-Assisted Reading'}</span>
             </button>
           </div>
         </div>

@@ -468,12 +468,12 @@ export function DualViewTranslation({ elements, paperId, pdfScale, isParsing }: 
         <div className="absolute inset-y-0 -left-1 -right-1 hover:bg-blue-500 hover:opacity-20 transition-opacity"></div>
       </div>
 
-      {/* Swap Button - Fixed at screen center */}
-      {!isDragging && containerRef.current && (
+      {/* Swap Button - Anchored to divider */}
+      {!isDragging && (
         <div 
-          className="fixed top-1/2 -translate-y-1/2 -translate-x-1/2 pointer-events-none z-20"
+          className="absolute top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
           style={{ 
-            left: `${containerRef.current.getBoundingClientRect().left + (containerRef.current.offsetWidth * leftWidth / 100)}px`
+            left: `${leftWidth}%`
           }}
         >
           <button

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Send, HelpCircle, Database, Sparkles } from 'lucide-react';
+import { Send, HelpCircle, Database, Sparkles, Globe2 } from 'lucide-react';
 import { ScholarQAResults } from './ScholarQAResults';
 import { ResourcesPanel } from './ResourcesPanel';
 
@@ -13,6 +13,7 @@ export function ScholarQA({ papersCount = 9, onReset }: ScholarQAProps) {
   const [isTyping, setIsTyping] = useState(false);
   const [hasResults, setHasResults] = useState(false);
   const [submittedQuestion, setSubmittedQuestion] = useState('');
+  const [knowledgeSource, setKnowledgeSource] = useState<'library' | 'public'>('library');
 
   const handleSubmit = () => {
     if (question.trim()) {
@@ -80,8 +81,8 @@ export function ScholarQA({ papersCount = 9, onReset }: ScholarQAProps) {
           </div>
 
           {/* Question Input */}
-          <div className="space-y-4">
-            <div className="relative">
+          <div>
+            <div className="relative rounded-lg border border-gray-300 focus-within:ring-2 focus-within:ring-gray-900 focus-within:border-transparent">
               <textarea
                 value={question}
                 onChange={(e) => {
@@ -91,8 +92,34 @@ export function ScholarQA({ papersCount = 9, onReset }: ScholarQAProps) {
                 onKeyDown={handleKeyDown}
                 placeholder="Type your question..."
                 rows={3}
-                className="w-full px-5 py-4 pr-16 text-base border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent placeholder:text-gray-400"
+                className="block w-full px-5 pt-4 pb-12 pr-16 text-base border-0 rounded-lg resize-none focus:outline-none placeholder:text-gray-400"
               />
+              <div className="absolute left-5 bottom-4 flex items-center gap-2 text-sm">
+                <button
+                  type="button"
+                  onClick={() => setKnowledgeSource('library')}
+                  className={`flex items-center gap-1.5 rounded-md px-2 py-1 transition-colors ${
+                    knowledgeSource === 'library'
+                      ? 'bg-gray-100 text-gray-900'
+                      : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'
+                  }`}
+                >
+                  <Database className="w-4 h-4" />
+                  <span>Your Library ({papersCount})</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setKnowledgeSource('public')}
+                  className={`flex items-center gap-1.5 rounded-md px-2 py-1 transition-colors ${
+                    knowledgeSource === 'public'
+                      ? 'bg-gray-100 text-gray-900'
+                      : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'
+                  }`}
+                >
+                  <Globe2 className="w-4 h-4" />
+                  <span>Public Library</span>
+                </button>
+              </div>
               <button
                 onClick={handleSubmit}
                 disabled={!question.trim()}
@@ -100,14 +127,6 @@ export function ScholarQA({ papersCount = 9, onReset }: ScholarQAProps) {
               >
                 <Send className="w-4 h-4" />
               </button>
-            </div>
-
-            {/* Library Info */}
-            <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg">
-              <Database className="w-4 h-4 text-gray-500" />
-              <span className="text-sm text-gray-700">
-                Your Library ({papersCount} papers with full text)
-              </span>
             </div>
           </div>
         </div>

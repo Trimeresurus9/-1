@@ -10,6 +10,9 @@ interface TranslationViewProps {
   paper: Paper;
   pdfScale: number;
   isParsing?: boolean;
+  targetLanguage?: Language;
+  viewMode?: ViewMode;
+  hideControlsBar?: boolean;
 }
 
 type ViewMode = 'dual-vertical' | 'translation-only' | 'dual-horizontal';
@@ -29,15 +32,27 @@ const viewModes = [
   { value: 'dual-horizontal', label: '左右对照' },
 ];
 
-export function TranslationView({ paper, pdfScale, isParsing }: TranslationViewProps) {
+export function TranslationView({
+  paper,
+  pdfScale,
+  isParsing,
+  targetLanguage: controlledTargetLanguage,
+  viewMode: controlledViewMode,
+  hideControlsBar = false,
+}: TranslationViewProps) {
   const [elements, setElements] = useState<DocumentElement[]>([]);
   const [loading, setLoading] = useState(true);
   const [translationProgress, setTranslationProgress] = useState(0);
-  const [viewMode, setViewMode] = useState<ViewMode>('dual-horizontal');
-  const [targetLanguage, setTargetLanguage] = useState<Language>('zh-CN');
+  const [internalViewMode, setInternalViewMode] = useState<ViewMode>('dual-horizontal');
+  const [internalTargetLanguage, setInternalTargetLanguage] = useState<Language>('zh-CN');
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const [showViewModeMenu, setShowViewModeMenu] = useState(false);
   const [translating, setTranslating] = useState(false);
+
+  const viewMode = controlledViewMode ?? internalViewMode;
+  const targetLanguage = controlledTargetLanguage ?? internalTargetLanguage;
+  const setViewMode = controlledViewMode ? (() => {}) : setInternalViewMode;
+  const setTargetLanguage = controlledTargetLanguage ? (() => {}) : setInternalTargetLanguage;
 
   useEffect(() => {
     loadDocument();
@@ -111,6 +126,7 @@ export function TranslationView({ paper, pdfScale, isParsing }: TranslationViewP
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-white">
       {/* Controls Bar */}
+      {!hideControlsBar ? (
       <div className="px-8 py-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
         {/* Language Selector */}
         <div className="relative">
@@ -172,6 +188,7 @@ export function TranslationView({ paper, pdfScale, isParsing }: TranslationViewP
           )}
         </div>
       </div>
+      ) : null}
 
       {/* Main Content Area */}
       {viewMode === 'dual-horizontal' ? (

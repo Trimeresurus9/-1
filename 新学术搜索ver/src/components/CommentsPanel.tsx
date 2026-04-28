@@ -1,14 +1,44 @@
-import React, { useState } from 'react';
-import { MessageSquare, StickyNote, Plus, X, ThumbsUp, Reply } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { MessageSquare, Search, StickyNote, X, ThumbsUp, ThumbsDown, Reply, Sparkles, SendHorizontal, Quote, Copy, FlaskConical, History } from 'lucide-react';
+
+interface SummaryCitation {
+  citationId: string;
+  elementId: string;
+  page: number;
+}
 
 interface CommentsPanelProps {
   paperId: string;
+  activeTab: 'home' | 'info' | 'comments' | 'notes' | 'chat' | 'history';
+  activeCitationId?: string | null;
+  onSelectSummaryCitation?: (citation: SummaryCitation) => void;
+  selectedExcerpt?: string | null;
+  onClearSelectedExcerpt?: () => void;
+  onChangeTab?: (tab: 'home' | 'info' | 'comments' | 'notes' | 'chat' | 'history') => void;
 }
 
-export function CommentsPanel({ paperId }: CommentsPanelProps) {
-  const [activeTab, setActiveTab] = useState<'comments' | 'notes'>('comments');
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [newContent, setNewContent] = useState('');
+export function CommentsPanel({
+  paperId,
+  activeTab,
+  activeCitationId = null,
+  onSelectSummaryCitation,
+  selectedExcerpt = null,
+  onClearSelectedExcerpt,
+  onChangeTab,
+}: CommentsPanelProps) {
+  const [newContent, setNewContent] = useState('Summarize this paper');
+  const [chatWorkflow, setChatWorkflow] = useState<'idle' | 'thinking' | 'summary' | 'selection-answer'>('idle');
+  const [chatUserPrompt, setChatUserPrompt] = useState<string | null>(null);
+  const [chatSubmittedExcerpt, setChatSubmittedExcerpt] = useState<string | null>(null);
+  const [chatResponseMode, setChatResponseMode] = useState<'summary' | 'selection-answer' | null>(null);
+  const [savedNotes, setSavedNotes] = useState<Array<{ id: string; content: string; timestamp: string; color: string }>>([]);
+  const [savedNoteFeedback, setSavedNoteFeedback] = useState<'summary' | 'selection-answer' | null>(null);
+  const [copiedResponse, setCopiedResponse] = useState<'summary' | 'selection-answer' | null>(null);
+  const [responseFeedback, setResponseFeedback] = useState<Record<'summary' | 'selection-answer', 'up' | 'down' | null>>({
+    summary: null,
+    'selection-answer': null,
+  });
+  const chatInputRef = useRef<HTMLTextAreaElement | null>(null);
 
   const mockComments = [
     {
@@ -57,59 +87,286 @@ export function CommentsPanel({ paperId }: CommentsPanelProps) {
       color: 'blue',
     },
   ];
+  const mockChatHistory = [
+    {
+      id: 'summary',
+      title: 'Summarize this paper',
+      preview: 'Section-by-section summary with references to the original paper.',
+      timestamp: 'Just now',
+    },
+    {
+      id: 'parallel-training',
+      title: 'How does Transformer improve parallel training?',
+      preview: 'Explains why removing recurrence improves computation over long sequences.',
+      timestamp: '2 hours ago',
+    },
+    {
+      id: 'attention-dependencies',
+      title: 'Why is self-attention enough for long-range dependencies?',
+      preview: 'Connects attention routing, encoder-decoder structure, and global context.',
+      timestamp: 'Yesterday',
+    },
+  ];
+  const selectionAnswerText = 'This selected passage is describing the paper\'s core claim: Transformer removes recurrence and relies on attention as the main routing mechanism. In the context of your question, the important implication is that dependency modeling is no longer constrained by sequential recurrence, which is why the model can train more efficiently while still capturing long-range structure.';
+  const notesList = [...savedNotes, ...mockNotes];
+  const quickQuestions = [
+    'Summarize this paper',
+    'How does Transformer improve parallel training compared with RNN-based systems?',
+    'Why is self-attention enough to model long-range dependencies in this paper?',
+  ];
+
+  const submitChatPrompt = (prompt: string) => {
+    const submittedPrompt = prompt.trim();
+
+    if (!submittedPrompt) {
+      return;
+    }
+
+    const nextMode =
+      submittedPrompt.includes('总结') || submittedPrompt.toLowerCase().includes('summarize')
+        ? 'summary'
+        : selectedExcerpt
+          ? 'selection-answer'
+          : null;
+
+    onChangeTab?.('chat');
+    setChatUserPrompt(submittedPrompt);
+    setChatSubmittedExcerpt(selectedExcerpt);
+    setChatResponseMode(nextMode);
+    setChatWorkflow(nextMode ? 'thinking' : 'idle');
+    setNewContent('');
+  };
 
   const handleAdd = () => {
     if (newContent.trim()) {
+      if (activeTab === 'chat' || activeTab === 'home') {
+        submitChatPrompt(newContent);
+      }
+
       // In real app, this would save to backend
       console.log('Adding:', activeTab, newContent);
-      setNewContent('');
-      setShowAddForm(false);
+      if (activeTab !== 'chat' && activeTab !== 'home') {
+        setNewContent('');
+      }
     }
   };
 
-  return (
-    <div className="h-full bg-white flex flex-col">
-      {/* Tab Navigation */}
-      <div className="border-b border-gray-200 flex-shrink-0">
-        <div className="flex">
-          <button
-            onClick={() => setActiveTab('comments')}
-            className={`flex-1 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-              activeTab === 'comments'
-                ? 'border-blue-600 text-blue-600'
-                : 'border-transparent text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            <div className="flex items-center justify-center gap-2">
-              <MessageSquare className="w-4 h-4" />
-              <span>Comments</span>
-              <span className="px-1.5 py-0.5 bg-gray-200 text-gray-700 text-xs rounded-full">
-                {mockComments.length}
-              </span>
-            </div>
-          </button>
-          <button
-            onClick={() => setActiveTab('notes')}
-            className={`flex-1 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-              activeTab === 'notes'
-                ? 'border-blue-600 text-blue-600'
-                : 'border-transparent text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            <div className="flex items-center justify-center gap-2">
-              <StickyNote className="w-4 h-4" />
-              <span>Notes</span>
-              <span className="px-1.5 py-0.5 bg-gray-200 text-gray-700 text-xs rounded-full">
-                {mockNotes.length}
-              </span>
-            </div>
-          </button>
-        </div>
-      </div>
+  const isChatTab = activeTab === 'chat';
+  const isInfoTab = activeTab === 'info';
+  const isHomeTab = activeTab === 'home';
+  const isHistoryTab = activeTab === 'history';
+  const summaryCitations: Array<SummaryCitation & { text: string }> = [
+    {
+      citationId: '1',
+      elementId: 'elem-5',
+      page: 1,
+      text: 'Transformer 完全基于注意力机制，直接移除了循环与卷积主干。',
+    },
+    {
+      citationId: '2',
+      elementId: 'elem-10',
+      page: 2,
+      text: '作者强调这种设计让模型能够直接建立全局依赖，而不再依赖 recurrent path。',
+    },
+    {
+      citationId: '3',
+      elementId: 'elem-16',
+      page: 3,
+      text: '在架构层面，编码器与解码器都由多头自注意力和前馈层堆叠而成，形成统一骨架。',
+    },
+  ];
+  const summarySections = [
+    {
+      title: 'Abstract',
+      items: [
+        {
+          text: 'The paper replaces recurrent and convolutional sequence modules with a Transformer architecture built entirely on attention.',
+          citations: [summaryCitations[0]],
+        },
+        {
+          text: 'The abstract frames the main payoff clearly: stronger parallelization and shorter training time without sacrificing translation quality.',
+          citations: [summaryCitations[0], summaryCitations[1]],
+        },
+      ],
+    },
+    {
+      title: 'Introduction',
+      items: [
+        {
+          text: 'The introduction positions Transformer as a response to the limits of recurrent paths when modeling long-range dependencies.',
+          citations: [summaryCitations[1]],
+        },
+        {
+          text: 'It argues that attention can serve as the full dependency-routing mechanism, not just an auxiliary module attached to an encoder-decoder stack.',
+          citations: [summaryCitations[1], summaryCitations[2]],
+        },
+      ],
+    },
+    {
+      title: 'Architecture',
+      items: [
+        {
+          text: 'The architecture section defines a repeatable encoder-decoder backbone where self-attention and feed-forward blocks become the standard computational unit.',
+          citations: [summaryCitations[2]],
+        },
+      ],
+    },
+  ];
+  const thinkingSteps = [
+    'Scanning abstract and introduction for the core claim',
+    'Matching architectural statements to source paragraphs',
+    'Drafting a section-by-section summary with citations',
+  ];
 
+  useEffect(() => {
+    if (chatWorkflow !== 'thinking') {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setChatWorkflow(chatResponseMode ?? 'idle');
+    }, 1500);
+
+    return () => window.clearTimeout(timer);
+  }, [chatResponseMode, chatWorkflow]);
+
+  useEffect(() => {
+    if (!savedNoteFeedback) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setSavedNoteFeedback(null);
+    }, 1600);
+
+    return () => window.clearTimeout(timer);
+  }, [savedNoteFeedback]);
+
+  useEffect(() => {
+    if (!copiedResponse) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setCopiedResponse(null);
+    }, 1600);
+
+    return () => window.clearTimeout(timer);
+  }, [copiedResponse]);
+
+  useEffect(() => {
+    if (activeTab === 'chat') {
+      chatInputRef.current?.focus();
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    if (selectedExcerpt) {
+      setNewContent('');
+      return;
+    }
+
+    if (!chatUserPrompt && chatWorkflow === 'idle' && !newContent.trim()) {
+      setNewContent('Summarize this paper');
+    }
+  }, [chatUserPrompt, chatWorkflow, newContent, selectedExcerpt]);
+
+  const renderCitationNode = (citation: SummaryCitation) => (
+    <button
+      key={citation.citationId}
+      type="button"
+      onClick={() => onSelectSummaryCitation?.(citation)}
+      className={`ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-semibold transition-colors ${
+        activeCitationId === citation.citationId
+          ? 'bg-blue-700 text-white'
+          : 'bg-blue-100 text-blue-700 hover:bg-blue-600 hover:text-white'
+      }`}
+      aria-label={`Jump to source ${citation.citationId}`}
+    >
+      {citation.citationId}
+    </button>
+  );
+
+  const saveAgentResponseToNotes = (mode: 'summary' | 'selection-answer') => {
+    const content =
+      mode === 'summary'
+        ? summarySections
+            .map((section) => `${section.title}: ${section.items.map((item) => item.text).join(' ')}`)
+            .join('\n\n')
+        : `${chatSubmittedExcerpt ? `Focused passage: "${chatSubmittedExcerpt}"\n\n` : ''}${selectionAnswerText}`;
+
+    setSavedNotes((prev) => [
+      {
+        id: `saved-note-${Date.now()}`,
+        content,
+        timestamp: 'Just now',
+        color: 'blue',
+      },
+      ...prev,
+    ]);
+    setSavedNoteFeedback(mode);
+  };
+
+  const getAgentResponseText = (mode: 'summary' | 'selection-answer') =>
+    mode === 'summary'
+      ? summarySections
+          .map((section) => `${section.title}: ${section.items.map((item) => item.text).join(' ')}`)
+          .join('\n\n')
+      : `${chatSubmittedExcerpt ? `Focused passage: "${chatSubmittedExcerpt}"\n\n` : ''}${selectionAnswerText}`;
+
+  const copyAgentResponse = async (mode: 'summary' | 'selection-answer') => {
+    try {
+      await navigator.clipboard.writeText(getAgentResponseText(mode));
+      setCopiedResponse(mode);
+    } catch (error) {
+      console.error('Failed to copy response', error);
+    }
+  };
+
+  const actionButtonClass = (active = false) =>
+    `inline-flex items-center gap-2 rounded-2xl border px-3 py-2 text-sm transition-colors ${
+      active
+        ? 'border-blue-200 bg-blue-50 text-blue-700'
+        : 'border-gray-200 bg-white text-gray-700 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700'
+    }`;
+
+  const iconActionButtonClass = (active = false) =>
+    `inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
+      active
+        ? 'bg-blue-50 text-blue-700'
+        : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
+    }`;
+
+  return (
+    <div className="h-full bg-slate-50 flex flex-col">
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-4">
-        {activeTab === 'comments' ? (
+      <div className="flex-1 overflow-y-auto px-4 py-5">
+        {activeTab === 'info' ? (
+          <div className="space-y-3">
+            <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+              <p className="text-sm font-semibold text-slate-950">Paper Info</p>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                View quick metadata, reading progress, and paper-level context here.
+              </p>
+            </div>
+            <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="space-y-3 text-sm text-slate-700">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-500">Paper ID</span>
+                  <span className="font-medium text-slate-950">{paperId}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-500">Status</span>
+                  <span className="font-medium text-slate-950">In Library</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-500">Reading Progress</span>
+                  <span className="font-medium text-slate-950">Page 3 / 15</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : activeTab === 'comments' ? (
           <div className="space-y-4">
             {mockComments.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -119,27 +376,27 @@ export function CommentsPanel({ paperId }: CommentsPanelProps) {
               </div>
             ) : (
               mockComments.map((comment) => (
-                <div key={comment.id} className="bg-gray-50 rounded-lg p-3 border border-gray-200 hover:border-gray-300 transition-colors">
+                <div key={comment.id} className="rounded-lg border border-slate-200 bg-white p-3.5 shadow-sm transition-colors hover:border-slate-300">
                   <div className="flex items-start gap-3 mb-2">
-                    <div className="w-8 h-8 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full flex items-center justify-center text-white text-xs font-medium flex-shrink-0">
+                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-medium flex-shrink-0">
                       {comment.avatar}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm font-medium text-gray-900">{comment.author}</span>
-                        <span className="text-xs text-gray-500">{comment.timestamp}</span>
+                        <span className="text-sm font-semibold text-slate-950">{comment.author}</span>
+                        <span className="text-xs text-slate-500">{comment.timestamp}</span>
                       </div>
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <p className="text-sm text-slate-700 leading-6">
                         {comment.content}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 ml-11 mt-2">
-                    <button className="flex items-center gap-1 text-xs text-gray-600 hover:text-blue-600 transition-colors">
+                    <button className="flex items-center gap-1 text-xs text-slate-500 hover:text-blue-600 transition-colors">
                       <ThumbsUp className="w-3.5 h-3.5" />
                       <span>{comment.likes}</span>
                     </button>
-                    <button className="flex items-center gap-1 text-xs text-gray-600 hover:text-blue-600 transition-colors">
+                    <button className="flex items-center gap-1 text-xs text-slate-500 hover:text-blue-600 transition-colors">
                       <Reply className="w-3.5 h-3.5" />
                       <span>Reply</span>
                     </button>
@@ -148,7 +405,7 @@ export function CommentsPanel({ paperId }: CommentsPanelProps) {
               ))
             )}
           </div>
-        ) : (
+        ) : activeTab === 'notes' ? (
           <div className="space-y-3">
             {mockNotes.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -157,71 +414,474 @@ export function CommentsPanel({ paperId }: CommentsPanelProps) {
                 <p className="text-xs text-gray-400 mt-1">Create your first note</p>
               </div>
             ) : (
-              mockNotes.map((note) => (
+              notesList.map((note) => (
                 <div 
                   key={note.id} 
-                  className={`rounded-lg p-3 border ${
+                  className={`rounded-lg border bg-white p-3.5 shadow-sm ${
                     note.color === 'yellow' 
-                      ? 'bg-yellow-50 border-yellow-200' 
-                      : 'bg-blue-50 border-blue-200'
-                  } hover:shadow-sm transition-shadow group`}
+                      ? 'border-l-4 border-l-amber-300 border-slate-200' 
+                      : 'border-l-4 border-l-blue-400 border-slate-200'
+                  } transition-colors hover:border-slate-300 group`}
                 >
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <p className="text-sm text-gray-800 leading-relaxed flex-1">
+                    <p className="text-sm text-slate-800 leading-6 flex-1">
                       {note.content}
                     </p>
-                    <button className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-gray-600 transition-opacity">
+                    <button className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-slate-600 transition-opacity">
                       <X className="w-4 h-4" />
                     </button>
                   </div>
-                  <span className="text-xs text-gray-500">{note.timestamp}</span>
+                  <span className="text-xs text-slate-500">{note.timestamp}</span>
                 </div>
               ))
             )}
           </div>
-        )}
-      </div>
+        ) : isHistoryTab ? (
+          <div className="space-y-4">
+            <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="flex items-center gap-2">
+                <div className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                  <History className="h-4 w-4" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-slate-950">Chat History</p>
+                  <p className="text-xs text-slate-500">Recent conversations about this paper</p>
+                </div>
+              </div>
+            </div>
 
-      {/* Add Button */}
-      <div className="border-t border-gray-200 p-4 flex-shrink-0">
-        {!showAddForm ? (
-          <button
-            onClick={() => setShowAddForm(true)}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Add {activeTab === 'comments' ? 'Comment' : 'Note'}</span>
-          </button>
-        ) : (
-          <div className="space-y-2">
-            <textarea
-              value={newContent}
-              onChange={(e) => setNewContent(e.target.value)}
-              placeholder={`Write a ${activeTab === 'comments' ? 'comment' : 'note'}...`}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-              rows={3}
-              autoFocus
-            />
-            <div className="flex gap-2">
+            <div className="space-y-2.5">
+              {mockChatHistory.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => {
+                    onChangeTab?.('chat');
+                    setChatUserPrompt(item.title);
+                    setChatSubmittedExcerpt(null);
+                    setChatResponseMode(item.id === 'summary' ? 'summary' : null);
+                    setChatWorkflow(item.id === 'summary' ? 'summary' : 'idle');
+                    setNewContent('');
+                  }}
+                  className="w-full rounded-lg border border-slate-200 bg-white p-3.5 text-left shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-semibold text-slate-950">{item.title}</p>
+                      <p className="mt-1 line-clamp-2 text-sm leading-6 text-slate-600">{item.preview}</p>
+                    </div>
+                    <span className="whitespace-nowrap text-xs text-slate-400">{item.timestamp}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : isHomeTab ? (
+          <div className="space-y-4">
+            <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+              <div className="px-4 pb-4 pt-4">
+                <div className="flex min-h-[210px] flex-col justify-between">
+                  <div className="flex flex-1 flex-col items-start justify-center pb-4 text-left">
+                    <div className="max-w-[340px]">
+                      <p className="text-sm font-medium leading-6 text-slate-800">
+                        Ask about this paper or any selected passage.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    {selectedExcerpt ? (
+                      <div className="flex items-start gap-3 rounded-lg border border-blue-100 bg-blue-50 px-3 py-2.5">
+                        <div className="mt-0.5 rounded-md bg-white p-1.5 text-blue-600 shadow-sm">
+                          <Quote className="h-3.5 w-3.5" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="line-clamp-3 text-sm leading-5 text-gray-700">
+                            {selectedExcerpt}
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={onClearSelectedExcerpt}
+                          className="rounded p-1 text-gray-400 transition-colors hover:bg-white hover:text-gray-600"
+                          aria-label="Clear selected text"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ) : null}
+
+                    <div className="rounded-lg border border-slate-200 bg-slate-50 p-2.5">
+                      <textarea
+                        value={newContent}
+                        onChange={(e) => setNewContent(e.target.value)}
+                        placeholder={
+                          selectedExcerpt
+                            ? 'Ask about the selected text...'
+                            : `Ask anything about paper ${paperId || ''}...`
+                        }
+                        className="w-full resize-none bg-transparent px-1 py-0.5 text-sm leading-6 text-slate-800 outline-none placeholder:text-slate-400"
+                        rows={2}
+                      />
+                      <div className="mt-2 flex items-center justify-end">
+                        <button
+                          type="button"
+                          onClick={handleAdd}
+                          disabled={!newContent.trim()}
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
+                          aria-label="Send"
+                        >
+                          <SendHorizontal className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+                <div className="px-4 py-4">
+                  <h3 className="text-[15px] font-semibold text-slate-900">更多相关论文</h3>
+                  <div className="mt-4 divide-y divide-slate-200">
+                    {[
+                      '查找最近一年关于解决流式语音合成中文本与语音对齐问题的 SOTA 论文。',
+                      '哪篇论文最早提出了 Thinker-Talker 双模型架构，Qwen3.5-Omni 在此基础上有哪些本质改进？',
+                      '调研目前哪些研究正在探索 “Audio-Visual Vibe Coding” 即基于视觉和音频输入直接生成代码的方向。',
+                    ].map((example) => (
+                      <button
+                        key={example}
+                        type="button"
+                        className="flex w-full items-center gap-4 py-4 text-left transition-colors hover:bg-slate-50"
+                      >
+                        <p className="min-w-0 flex-1 text-sm leading-6 text-slate-800">
+                          {example}
+                        </p>
+                        <span className="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500">
+                          <Search className="h-4 w-4" />
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
               <button
-                onClick={handleAdd}
-                className="flex-1 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                type="button"
+                className="w-full rounded-lg border border-slate-200 bg-white px-4 py-4 text-left shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50"
               >
-                Save
+                <div className="min-w-0">
+                  <p className="text-[15px] font-semibold text-slate-950">灵感发现</p>
+                  <p className="mt-1 text-sm leading-6 text-slate-600">
+                    Discover follow-up questions, related directions, and potential research gaps from this paper.
+                  </p>
+                  <div className="mt-4">
+                    <span className="inline-flex items-center rounded-full bg-blue-600 px-3 py-1.5 text-xs font-medium text-white">
+                      发现灵感
+                    </span>
+                  </div>
+                </div>
               </button>
+
               <button
-                onClick={() => {
-                  setShowAddForm(false);
-                  setNewContent('');
-                }}
-                className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-300 transition-colors"
+                type="button"
+                className="w-full rounded-lg border border-slate-200 bg-white px-4 py-4 text-left shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50"
               >
-                Cancel
+                <div className="min-w-0">
+                  <p className="text-[15px] font-semibold text-slate-950">论文复现</p>
+                  <p className="mt-1 text-sm leading-6 text-slate-600">
+                    Turn this paper into an experiment-ready plan, with implementation steps and environment setup guidance.
+                  </p>
+                  <div className="mt-4">
+                    <span className="inline-flex items-center rounded-full bg-slate-900 px-3 py-1.5 text-xs font-medium text-white">
+                      开始复现
+                    </span>
+                  </div>
+                </div>
               </button>
             </div>
           </div>
+        ) : (
+          <div className="space-y-6">
+            {!chatUserPrompt && chatWorkflow === 'idle' ? (
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white shadow-sm">
+                    <Sparkles className="h-4 w-4" />
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-xl font-semibold tracking-tight text-slate-950">Hey there!</p>
+                    <p className="text-sm leading-6 text-slate-700">
+                      This paper introduces the Transformer as a fully attention-based architecture for sequence transduction. It explains why removing recurrence improves parallel training, shows how global dependencies can be modeled directly through attention, and formalizes the encoder-decoder stack that later became a core large-model pattern.
+                    </p>
+                    <p className="text-sm leading-6 text-slate-700">
+                      I checked all 15 pages, let&apos;s go.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  {quickQuestions.map((question) => (
+                    <button
+                      key={question}
+                      type="button"
+                      onClick={() => submitChatPrompt(question)}
+                      className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-3 text-left text-sm leading-6 text-slate-800 shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50"
+                    >
+                      {question}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            {!chatUserPrompt && chatWorkflow === 'idle' ? (
+              <div className="rounded-lg border border-slate-200 bg-white px-4 py-4 text-sm leading-6 text-slate-600 shadow-sm">
+                Start a conversation about this paper.
+              </div>
+            ) : null}
+
+            {chatUserPrompt ? (
+              <div className="flex justify-end">
+                <div className="max-w-[82%] rounded-2xl bg-gray-100 px-4 py-3 text-sm font-medium text-gray-800 shadow-sm">
+                  {chatSubmittedExcerpt ? (
+                    <div className="mb-2 rounded-xl bg-white/80 px-3 py-2 text-xs font-normal leading-5 text-gray-600">
+                      “{chatSubmittedExcerpt}”
+                    </div>
+                  ) : null}
+                  {chatUserPrompt}
+                </div>
+              </div>
+            ) : null}
+
+            {chatWorkflow === 'thinking' ? (
+              <div className="flex items-start gap-3">
+                <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white shadow-sm">
+                  <Sparkles className="h-4 w-4" />
+                </div>
+                <div className="min-w-0 flex-1 rounded-lg border border-blue-100 bg-white px-4 py-4 shadow-sm">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-slate-950">
+                    <span>Thinking</span>
+                    <span className="inline-flex items-center gap-1">
+                      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500 [animation-delay:0ms]" />
+                      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500 [animation-delay:200ms]" />
+                      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500 [animation-delay:400ms]" />
+                    </span>
+                  </div>
+                  <div className="mt-3 space-y-2">
+                    {thinkingSteps.map((step) => (
+                      <div
+                        key={step}
+                        className="flex items-center gap-3 rounded-lg bg-blue-50 px-3 py-2 text-sm leading-5 text-blue-900"
+                      >
+                        <span className="h-2 w-2 rounded-full bg-blue-500" />
+                        <span>{step}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : null}
+
+            {chatWorkflow === 'summary' ? (
+              <div className="flex items-start gap-3">
+                <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white shadow-sm">
+                  <Sparkles className="h-4 w-4" />
+                </div>
+                <div className="min-w-0 flex-1 space-y-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+                  {summarySections.map((section) => (
+                    <div key={section.title}>
+                      <div className="mb-3 flex items-center gap-2">
+                        <h3 className="text-base font-semibold text-slate-950">{section.title}</h3>
+                      </div>
+                      <ul className="space-y-3 text-sm leading-6 text-slate-800">
+                        {section.items.map((item) => (
+                          <li key={item.text} className="flex gap-3">
+                            <span className="mt-[9px] h-1.5 w-1.5 rounded-full bg-slate-800 flex-shrink-0" />
+                            <span>
+                              {item.text}
+                              {item.citations.map((citation) => renderCitationNode(citation))}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => saveAgentResponseToNotes('summary')}
+                      className={actionButtonClass()}
+                    >
+                      <StickyNote className="h-4 w-4" />
+                      <span>Save to Notes</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => copyAgentResponse('summary')}
+                      className={iconActionButtonClass(copiedResponse === 'summary')}
+                      aria-label={copiedResponse === 'summary' ? 'Copied' : 'Copy'}
+                      title={copiedResponse === 'summary' ? 'Copied' : 'Copy'}
+                    >
+                      <Copy className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setResponseFeedback((prev) => ({
+                          ...prev,
+                          summary: prev.summary === 'up' ? null : 'up',
+                        }))
+                      }
+                      className={iconActionButtonClass(responseFeedback.summary === 'up')}
+                      aria-label="Like"
+                      title="Like"
+                    >
+                      <ThumbsUp className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setResponseFeedback((prev) => ({
+                          ...prev,
+                          summary: prev.summary === 'down' ? null : 'down',
+                        }))
+                      }
+                      className={iconActionButtonClass(responseFeedback.summary === 'down')}
+                      aria-label="Dislike"
+                      title="Dislike"
+                    >
+                      <ThumbsDown className="h-4 w-4" />
+                    </button>
+                    {savedNoteFeedback === 'summary' ? (
+                      <span className="text-xs font-medium text-blue-700">Saved to Notes</span>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+            ) : null}
+
+            {chatWorkflow === 'selection-answer' && chatSubmittedExcerpt ? (
+              <div className="flex items-start gap-3">
+                <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white shadow-sm">
+                  <Sparkles className="h-4 w-4" />
+                </div>
+                <div className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-4 py-4 shadow-sm">
+                  <div className="rounded-lg bg-blue-50 px-3 py-2 text-xs leading-5 text-blue-900">
+                    Focused passage: “{chatSubmittedExcerpt}”
+                  </div>
+                  <p className="mt-3 text-sm leading-6 text-slate-800">
+                    {selectionAnswerText}
+                  </p>
+                  <div className="mt-4 flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => saveAgentResponseToNotes('selection-answer')}
+                      className={actionButtonClass()}
+                    >
+                      <StickyNote className="h-4 w-4" />
+                      <span>Save to Notes</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => copyAgentResponse('selection-answer')}
+                      className={iconActionButtonClass(copiedResponse === 'selection-answer')}
+                      aria-label={copiedResponse === 'selection-answer' ? 'Copied' : 'Copy'}
+                      title={copiedResponse === 'selection-answer' ? 'Copied' : 'Copy'}
+                    >
+                      <Copy className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setResponseFeedback((prev) => ({
+                          ...prev,
+                          'selection-answer': prev['selection-answer'] === 'up' ? null : 'up',
+                        }))
+                      }
+                      className={iconActionButtonClass(responseFeedback['selection-answer'] === 'up')}
+                      aria-label="Like"
+                      title="Like"
+                    >
+                      <ThumbsUp className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setResponseFeedback((prev) => ({
+                          ...prev,
+                          'selection-answer': prev['selection-answer'] === 'down' ? null : 'down',
+                        }))
+                      }
+                      className={iconActionButtonClass(responseFeedback['selection-answer'] === 'down')}
+                      aria-label="Dislike"
+                      title="Dislike"
+                    >
+                      <ThumbsDown className="h-4 w-4" />
+                    </button>
+                    {savedNoteFeedback === 'selection-answer' ? (
+                      <span className="text-xs font-medium text-blue-700">Saved to Notes</span>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+            ) : null}
+          </div>
         )}
       </div>
+
+      {/* Chat Input */}
+      {isChatTab ? (
+        <div className="border-t border-slate-200 bg-white/95 p-4 flex-shrink-0 shadow-[0_-8px_24px_rgba(15,23,42,0.04)]">
+          <div className="space-y-3">
+            {selectedExcerpt ? (
+              <div className="flex items-start gap-3 rounded-lg border border-blue-100 bg-blue-50 px-3 py-3 animate-in fade-in slide-in-from-bottom-2 duration-200">
+                <div className="mt-0.5 rounded-md bg-white p-1.5 text-blue-600 shadow-sm">
+                  <Quote className="h-3.5 w-3.5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="line-clamp-3 text-sm leading-6 text-slate-700">
+                    {selectedExcerpt}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={onClearSelectedExcerpt}
+                  className="rounded p-1 text-gray-400 transition-colors hover:bg-white hover:text-gray-600"
+                  aria-label="Clear selected text"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            ) : null}
+
+            <div className="relative">
+              <textarea
+                ref={chatInputRef}
+                value={newContent}
+                onChange={(e) => setNewContent(e.target.value)}
+                placeholder={
+                  selectedExcerpt
+                    ? 'Ask about the selected text...'
+                    : `Ask anything about paper ${paperId || ''}...`
+                }
+                className="w-full resize-none rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 pb-12 text-sm leading-6 text-slate-800 focus:border-transparent focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                rows={3}
+              />
+              <button
+                onClick={handleAdd}
+                disabled={!newContent.trim()}
+                className="absolute bottom-3 right-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+                aria-label="Send"
+              >
+                <SendHorizontal className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

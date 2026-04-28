@@ -7,6 +7,7 @@ interface SeoCard {
 }
 
 interface MarketingSeoPageProps {
+  language?: 'zh' | 'en';
   badge: string;
   title: string;
   subtitle: string;
@@ -23,6 +24,7 @@ interface MarketingSeoPageProps {
 }
 
 export function MarketingSeoPage({
+  language = 'zh',
   badge,
   title,
   subtitle,
@@ -37,6 +39,8 @@ export function MarketingSeoPage({
   overview,
   highlights,
 }: MarketingSeoPageProps) {
+  const isZh = language === 'zh';
+
   React.useEffect(() => {
     document.title = titleTag;
 
@@ -106,7 +110,9 @@ export function MarketingSeoPage({
       <section className="rounded-[2rem] border border-slate-200 bg-slate-950 px-8 py-10 text-white shadow-[0_40px_120px_-80px_rgba(15,23,42,0.95)]">
         <div className="max-w-3xl">
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-300">Why It Matters</p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight">为 SEO 入口准备的功能介绍页</h2>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight">
+            {isZh ? '核心卖点与落地价值' : 'Key Selling Points and Practical Value'}
+          </h2>
         </div>
         <div className="mt-8 grid gap-5 md:grid-cols-2">
           {highlights.map((item) => (

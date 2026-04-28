@@ -184,25 +184,58 @@ export function HomePage({ onNavigateToWorkspace, onNavigate, onOpenPricing, onS
     const configMap: Record<Exclude<MarketingPageKey, 'home'>, PageConfig> = {
       search: {
         badge: 'Search',
-        title: 'Scholar Search: AI 文献搜索与文献综述工具',
-        subtitle: '围绕研究问题、方法、数据集和排除条件组织学术检索，而不是只做关键词匹配。',
-        description: '这是 Search 一级菜单对应的 SEO 介绍页，用来承接 AI 文献搜索、文献综述工具、academic search engine 等搜索意图。',
-        titleTag: 'Scholar Search - AI文献搜索与文献综述工具 | WisPaper',
-        metaDescription: '用 AI 理解研究意图，按研究问题、方法、数据集与排除条件精准搜索论文。支持复杂学术检索、论文对比与文献综述工作流。',
-        pills: ['AI文献搜索', '文献综述工具', 'academic search engine'],
+        title: isZh ? 'Scholar Search: AI 驱动的学术搜索引擎' : 'Scholar Search: AI-Powered Academic Search',
+        subtitle: isZh
+          ? '支持自然语言提问与 AI 深度语义理解，依托全文检索能力，从海量文献中精准锁定真正相关的核心论文。'
+          : 'Ask in natural language and let AI deeply interpret your research intent. Powered by full-text retrieval, WisPaper pinpoints the most relevant core papers from massive literature collections.',
+        description: isZh
+          ? '面向学术搜索、全文检索与跨学科探索场景，帮助你更快完成文献初筛、源头文献定位与研究方向摸排。'
+          : 'Built for scholar search, full-text retrieval, and cross-disciplinary exploration so you can screen literature, locate source papers, and enter new fields faster.',
+        titleTag: isZh ? 'Scholar Search - AI 学术搜索与全文检索 | WisPaper' : 'Scholar Search - AI Academic Search and Full-Text Retrieval | WisPaper',
+        metaDescription: isZh
+          ? 'WisPaper Scholar Search 支持自然语言学术搜索、全文检索与高精度文献筛选，可在数分钟内从海量论文中提炼关键核心文献。'
+          : 'WisPaper Scholar Search supports natural-language academic search, full-text retrieval, and high-precision literature screening to distill must-read papers from massive corpora in minutes.',
+        pills: isZh ? ['学术搜索', '全文检索', '语义理解'] : ['Scholar Search', 'Full-text Retrieval', 'Semantic Understanding'],
         overview: [
-          { title: '研究问题导向', body: '先理解你要解决的研究任务，再组织结果，不把复杂需求压扁成几个关键词。' },
-          { title: '复杂条件筛选', body: '支持包含、排除、比较和时间限制，更适合系统性的综述工作。' },
-          { title: '继续进入工作流', body: '搜索结果不是终点，后续可以继续转成对比、分组和综述结构。' },
+          {
+            title: isZh ? '海量文献极速初筛' : 'Rapid literature screening',
+            body: isZh
+              ? '围绕具体科研需求自动过滤海量结果，5 分钟内即可完成对 1000 篇文献的初筛，并提炼出最值得优先阅读的核心论文。'
+              : 'Automatically filters large result sets around your research need, screening up to 1,000 papers in minutes and distilling the must-read core set.',
+          },
+          {
+            title: isZh ? '精准文献定点寻踪' : 'Precision literature locating',
+            body: isZh
+              ? '即使只有模糊概念、问题线索或记忆片段，也能快速定位最相关的源头论文与关键工作。'
+              : 'Quickly locates the most relevant source papers even when you only have fuzzy concepts, partial questions, or fragmented memories.',
+          },
+          {
+            title: isZh ? '跨学科探索' : 'Cross-disciplinary exploration',
+            body: isZh
+              ? '进入全新领域时，直接用自然语言提问即可快速拿到奠基性论文、代表性综述与关键脉络。'
+              : 'When entering a new field, ask directly in natural language to surface foundational papers, major reviews, and the field’s core trajectory.',
+          },
         ],
         highlights: [
-          { title: '更适合 high-intent 搜索流量', body: '用于承接想找相关论文、做综述、排除方法和数据集的用户。' },
-          { title: '解释结果而不是只列链接', body: '把输出讲成任务、方法、约束条件和可比较字段。' },
-          { title: '引导到真实产品路径', body: '用户看完介绍页后可以直接进入实际搜索流程。' },
-          { title: '支持 comparison intent', body: '也适合承接 Google Scholar alternative / Semantic Scholar alternative 这类搜索需求。' },
+          {
+            title: isZh ? '几乎 0 幻觉' : 'Near-zero hallucination',
+            body: isZh ? '回答与检索结果严格基于真实文献，确保学术引用的真实性与严谨性。' : 'Outputs stay grounded in real literature so academic citations remain trustworthy and rigorous.',
+          },
+          {
+            title: isZh ? '95% 准确率' : '95% accuracy rate',
+            body: isZh ? '以高精度锁定核心论文，减少无效阅读和无关噪声。' : 'Industry-leading retrieval accuracy surfaces core papers with far less irrelevant noise.',
+          },
+          {
+            title: isZh ? '5 亿篇论文索引' : '500 million papers indexed',
+            body: isZh ? '覆盖超大规模论文数据库，支持从广度探索到深度定点检索。' : 'A massive academic index supports both broad discovery and precise paper locating.',
+          },
+          {
+            title: isZh ? '1.2 亿开源全文' : '120 million OA PDFs',
+            body: isZh ? '拥有丰富的开放获取全文资源，方便后续阅读、追问和综述生成。' : 'A large open-access full-text corpus makes follow-up reading, Q&A, and review generation much more efficient.',
+          },
         ],
-        primaryLabel: '进入 Scholar Search',
-        secondaryLabel: '回到首页',
+        primaryLabel: isZh ? '进入 Scholar Search' : 'Open Scholar Search',
+        secondaryLabel: isZh ? '回到首页' : 'Back to Home',
         onPrimaryAction: () => handleStartSearch(),
         onSecondaryAction: () => setActivePage('home'),
       },
@@ -256,121 +289,286 @@ export function HomePage({ onNavigateToWorkspace, onNavigate, onOpenPricing, onS
       },
       'scholar-qa': {
         badge: 'Feature',
-        title: 'Scholar QA: 基于研究语境继续追问你的论文库',
-        subtitle: '适合把“找到论文”推进到“围绕论文提问、归纳、验证和追问”的下一步。',
-        description: 'Feature 菜单下的 SEO 页面，用来介绍 Scholar QA 作为搜索后的问答能力，而不是与 Scholar Search 抢首页主入口。',
-        titleTag: 'Scholar QA | WisPaper Feature',
-        metaDescription: '了解 WisPaper Scholar QA：在搜索和论文库基础上继续提问、归纳、追问与验证研究结论。',
-        pills: ['Question answering', 'Research follow-up', 'Paper context'],
+        title: isZh ? 'Scholar Q&A: 面向公域文献与私有知识库的学术问答' : 'Scholar Q&A: Scholarly Q&A Across Public and Private Literature',
+        subtitle: isZh
+          ? '基于海量公域论文与个人知识库进行智能对话，无论是速读难论文，还是跨文献对比分析，都能给出带可追溯引用的专业回答。'
+          : 'Run intelligent scholarly conversations over both global literature and your private library, with professional answers grounded in traceable citations.',
+        description: isZh
+          ? '适合在搜索与知识库基础上继续提问、归纳、比较与验证，把“找到论文”推进到“真正读懂和用起来”。'
+          : 'Designed for follow-up questioning, synthesis, comparison, and validation after search so you can move from finding papers to actually understanding and using them.',
+        titleTag: isZh ? 'Scholar Q&A - 学术问答与可追溯引用 | WisPaper' : 'Scholar Q&A - Academic Question Answering with Traceable Citations | WisPaper',
+        metaDescription: isZh
+          ? 'WisPaper Scholar Q&A 基于公域论文与私有知识库提供学术问答、复杂论文速读与跨文献对比分析，所有回答均带可追溯引用。'
+          : 'WisPaper Scholar Q&A delivers academic question answering, rapid reading of complex papers, and cross-paper comparison over public literature and private libraries, with traceable citations.',
+        pills: isZh ? ['学术问答', '私人知识库', '语义搜索'] : ['Scholar Q&A', 'Private Library', 'Semantic Search'],
         overview: [
-          { title: '从检索进入问答', body: '先找到相关论文，再对结果发问，比直接泛问更稳定。' },
-          { title: '适合 related work 推进', body: '围绕方法差异、实验设置和局限性做后续追问。' },
-          { title: '减少上下文切换', body: '不用在多个工具之间复制摘要和引用再提问。' },
+          {
+            title: isZh ? '复杂文献速读' : 'Rapid complex literature reading',
+            body: isZh
+              ? '面对晦涩冗长的论文，可直接追问公式推导、实验参数或核心结论，几分钟内快速掌握重点。'
+              : 'Ask directly about derivations, experiment settings, or core findings in dense papers and grasp the essentials in minutes.',
+          },
+          {
+            title: isZh ? '跨文献对比分析' : 'Cross-literature comparative analysis',
+            body: isZh
+              ? '在私有 Library 中选择多篇论文，让 AI 对比研究方法、数据集、评价指标与实验效果差异。'
+              : 'Select multiple papers in your private Library and let AI compare methods, datasets, evaluation settings, and outcomes across them.',
+          },
+          {
+            title: isZh ? '双源知识驱动' : 'Dual-source knowledge grounding',
+            body: isZh
+              ? '既能在 5 亿篇公域论文中做广度问答，也能在私有知识库中做深度研读与追问。'
+              : 'Move seamlessly between broad Q&A over massive public corpora and deep reading over your own curated library.',
+          },
         ],
         highlights: [
-          { title: '用于搜索后的深挖', body: '把 Scholar QA 定位成 Search 工作流的下一步。' },
-          { title: '适合研究讨论场景', body: '当你已经有一组候选论文时，它更有价值。' },
-          { title: 'SEO 页面承担解释角色', body: '把问答场景写成用户任务，而不是抽象功能名词。' },
-          { title: 'CTA 回真实产品', body: '看完介绍后可直接进入 Scholar QA 页面。' },
+          {
+            title: isZh ? '双源知识库驱动' : 'Dual-library intelligence',
+            body: isZh ? '兼顾全域学术广度与个人私有知识深度。' : 'Combines global academic breadth with the depth of your private archive.',
+          },
+          {
+            title: isZh ? '引用可追溯' : 'Traceable citations',
+            body: isZh ? '所有回答都有真实文献支撑，避免凭空编造。' : 'Every answer is anchored to real references instead of unsupported claims.',
+          },
+          {
+            title: isZh ? '深度读报助手' : 'Deep reading assistant',
+            body: isZh ? '针对复杂学术概念、实验设计和论文局限性支持多轮追问。' : 'Supports iterative questioning on difficult concepts, experiment design, and paper limitations.',
+          },
+          {
+            title: isZh ? '适合研究判断场景' : 'Built for research judgment',
+            body: isZh ? '帮助你更快完成理解、比较、验证与引用整理。' : 'Helps you synthesize, compare, validate, and cite evidence faster.',
+          },
         ],
-        primaryLabel: '打开 Scholar QA',
-        secondaryLabel: '回到首页',
+        primaryLabel: isZh ? '打开 Scholar Q&A' : 'Open Scholar Q&A',
+        secondaryLabel: isZh ? '回到首页' : 'Back to Home',
         onPrimaryAction: () => onNavigate?.('scholar-qa'),
         onSecondaryAction: () => setActivePage('home'),
       },
       agent: {
         badge: 'Feature',
-        title: 'Agent: 为复杂科研任务设计的学术 Agent 工作流',
-        subtitle: '当简单搜索不够时，Agent 帮你把检索、追问、整理和判断串成连续的研究动作。',
-        description: 'Agent 页承担功能介绍角色，用来说明 WisPaper 中的学术 Agent 如何服务复杂研究任务，而不是只做一次性论文搜索。',
-        titleTag: 'Agent | WisPaper Feature',
-        metaDescription: '了解 WisPaper Agent：面向复杂科研任务的学术 Agent，可用于检索推进、资料整理、related work 分析与研究判断。',
-        pills: ['学术Agent', 'Research workflow', 'Task orchestration'],
+        title: isZh ? 'Scholar Agent: 端到端自动化的科研智能体' : 'Scholar Agent: End-to-End Autonomous Research Agent',
+        subtitle: isZh
+          ? '打通搜索、综述、趋势、知识库与问答等 WisPaper 核心能力，通过模块化自由编排，自动执行复杂科研工作流。'
+          : 'Seamlessly integrates search, survey, trends, library, and Q&A into a modular agent workflow that can automate complex research tasks end to end.',
+        description: isZh
+          ? '适合处理灵感发现、选题推进、论文复现与多步研究执行，让复杂科研不再停留在零散工具切换。'
+          : 'Built for inspiration discovery, topic exploration, paper reproduction, and multi-step research execution without constant tool switching.',
+        titleTag: isZh ? 'Scholar Agent - 科研智能体与工作流自动化 | WisPaper' : 'Scholar Agent - Research Agent and Workflow Automation | WisPaper',
+        metaDescription: isZh
+          ? 'WisPaper Scholar Agent 融合搜索、综述、趋势、知识库与问答能力，支持模块化科研工作流编排与端到端自动执行。'
+          : 'WisPaper Scholar Agent combines search, survey, trends, library, and Q&A into modular research workflows with end-to-end autonomous execution.',
+        pills: isZh ? ['科研智能体', '工作流自动化', '端到端执行'] : ['Research Agent', 'Workflow Automation', 'End-to-End Execution'],
         overview: [
-          { title: '从搜索走向多步任务', body: '不只是找论文，而是继续推进追问、筛选、整理与判断。' },
-          { title: '适合复杂研究问题', body: '尤其适合需要多轮检索、比较和上下文保持的场景。' },
-          { title: '把零散动作连成流程', body: '帮助用户减少在多个工具之间来回切换。' },
+          {
+            title: isZh ? '灵感发现' : 'Inspiration discovery',
+            body: isZh
+              ? '通过苏格拉底式启发对话激发学术思考，帮助你持续发现新的研究切口、问题与方向。'
+              : 'Uses Socratic-style dialogue to stimulate academic thinking and uncover fresh research directions, questions, and opportunities.',
+          },
+          {
+            title: isZh ? '论文复现' : 'Paper reproduction',
+            body: isZh
+              ? '支持一键推进环境配置、实验运行与结果复查，把“看懂论文”继续推进到“复现论文”。'
+              : 'Extends understanding into reproduction by helping configure environments, run experiments, and verify results.',
+          },
+          {
+            title: isZh ? '模块化工作流拼装' : 'Modular workflow composition',
+            body: isZh
+              ? '像搭积木一样自由组合搜索、综述、问答与实验步骤，形成适合你课题的专属流程。'
+              : 'Compose search, survey, Q&A, and experiment steps like building blocks to fit your own research workflow.',
+          },
         ],
         highlights: [
-          { title: '强化 WisPaper 的 Agent 能力叙事', body: '让功能入口和产品定位保持一致。' },
-          { title: '适合承接学术 Agent 相关搜索词', body: '把 Agent 解释成科研任务工具，而不是抽象概念。' },
-          { title: '与 Search、QA、Survey 串联', body: 'Agent 更像整条工作流的协调层。' },
-          { title: 'CTA 回到真实产品', body: '看完介绍后可以继续进入工作区。' },
+          {
+            title: isZh ? '全功能精华融合' : 'Integrated core capabilities',
+            body: isZh ? '一站式调动搜索、综述、趋势、知识库与问答工具。' : 'Brings together search, survey, trends, library, and Q&A in one orchestrated workflow.',
+          },
+          {
+            title: isZh ? '自由组合工作流' : 'Customizable workflows',
+            body: isZh ? '模块化设计让不同研究任务都能快速搭建适配流程。' : 'Modular design makes it easy to configure workflows for different research goals.',
+          },
+          {
+            title: isZh ? '端到端自主执行' : 'End-to-end autonomy',
+            body: isZh ? '从选题、调研到总结与实验准备，都可以大幅减少人工切换与重复操作。' : 'Cuts down manual switching across topic selection, literature review, synthesis, and experiment setup.',
+          },
+          {
+            title: isZh ? '复杂任务更有优势' : 'Built for complex work',
+            body: isZh ? '越是多步骤、多约束、多轮迭代的科研任务，Agent 的价值越明显。' : 'The more multi-step and iterative the research task, the more valuable the agent becomes.',
+          },
         ],
-        primaryLabel: '进入 WisPaper',
-        secondaryLabel: '回到首页',
+        primaryLabel: isZh ? '进入 WisPaper' : 'Open WisPaper',
+        secondaryLabel: isZh ? '回到首页' : 'Back to Home',
         onPrimaryAction: onNavigateToWorkspace,
         onSecondaryAction: () => setActivePage('home'),
       },
       library: {
         badge: 'Feature',
-        title: 'Library: 为检索后的论文管理和筛选提供承接页',
-        subtitle: '把搜索结果转成可保存、可分类、可回看的研究资产。',
-        description: 'Library 是 Feature 菜单中的功能介绍页，适合承接“文献管理 / 论文收藏 / research library”相关搜索意图。',
-        titleTag: 'Library | WisPaper Feature',
-        metaDescription: '了解 WisPaper Library：保存、分类和回看搜索结果，把论文管理纳入 Scholar Search 工作流。',
-        pills: ['Save papers', 'Research library', 'Collection workflow'],
+        title: isZh ? 'Library: 私有化、智能化的学术知识库' : 'Library: A Private, Intelligent Academic Knowledge Base',
+        subtitle: isZh
+          ? '打造个人或团队专属文献中枢，支持本地论文上传、自动分类与跨文档 AI 全文检索，让知识沉淀真正可复用。'
+          : 'Build a private research hub for yourself or your team with local paper upload, automated organization, and AI-powered cross-document full-text search.',
+        description: isZh
+          ? '面向文献管理、团队知识资产沉淀与跨文档检索场景，提供超越传统参考管理工具的下一代学术库体验。'
+          : 'Designed for reference management, team knowledge accumulation, and cross-document retrieval beyond traditional literature management tools.',
+        titleTag: isZh ? 'Library - 私有学术知识库与文献管理 | WisPaper' : 'Library - Private Academic Knowledge Base and Reference Management | WisPaper',
+        metaDescription: isZh
+          ? 'WisPaper Library 支持本地论文上传、自动分类、私有化检索与多端同步，帮助个人与团队沉淀长期可复用的学术知识资产。'
+          : 'WisPaper Library supports local paper uploads, intelligent organization, private retrieval, and multi-device access for long-term academic knowledge management.',
+        pills: isZh ? ['知识库', '文献管理工具', 'Zotero / Mendeley 替代'] : ['Library', 'Reference Management Tool', 'Zotero / Mendeley Alternative'],
         overview: [
-          { title: '保存真正相关的结果', body: '搜索之后把值得继续看的论文沉淀下来，不再反复重搜。' },
-          { title: '支持后续阅读和比较', body: 'Library 是比较、标注和继续分析的稳定入口。' },
-          { title: '适合形成个人知识库', body: '对长期课题尤其重要，避免论文资产分散。' },
+          {
+            title: isZh ? '个人电子藏书阁' : 'Personal reading archive',
+            body: isZh
+              ? '集中管理电脑里零散的 PDF 论文，借助自动分类与全文检索，彻底告别“记得看过但找不到”。'
+              : 'Centralize scattered local PDFs and eliminate the “I know I read it, but I can’t find it” problem with smart organization and retrieval.',
+          },
+          {
+            title: isZh ? '课题组知识资产沉淀' : 'Lab knowledge accumulation',
+            body: isZh
+              ? '为实验室或团队搭建共享文献库，让新成员快速接入历史积累与关键参考资料。'
+              : 'Create a shared literature base for labs and teams so new members can quickly access accumulated references and prior knowledge.',
+          },
+          {
+            title: isZh ? '跨文档智能检索' : 'Cross-document intelligent retrieval',
+            body: isZh
+              ? '不只保存论文，还能基于全文内容在整个私有库里进行深度检索、追问与知识复用。'
+              : 'Go beyond storage with deep AI retrieval across the full text of your private collection.',
+          },
         ],
         highlights: [
-          { title: '适合承接文献管理意图', body: '让用户理解它不是单纯的收藏夹，而是研究工作流一部分。' },
-          { title: '与 Search 互补', body: '搜索负责找，Library 负责留。' },
-          { title: '支持后续 QA 与 Survey', body: '保存的结果可以继续用于更深层的分析。' },
-          { title: 'CTA 可直达产品内库页', body: '介绍页结束后直接进入我的论文库。' },
+          {
+            title: isZh ? '结构化管理' : 'Structured management',
+            body: isZh ? '让文献不再散落各处，把核心资料沉淀成长期知识资产。' : 'Turns scattered literature into structured, reusable research assets.',
+          },
+          {
+            title: isZh ? '私有化检索' : 'Private retrieval',
+            body: isZh ? '为个人与团队提供安全可靠的私有学术搜索入口。' : 'Provides secure, private search over your own academic collection.',
+          },
+          {
+            title: isZh ? '多端同步' : 'Multi-device synchronization',
+            body: isZh ? '随时随地访问与复用你的论文资产和知识沉淀。' : 'Access your library and research assets wherever you work.',
+          },
+          {
+            title: isZh ? '超越传统文献管理' : 'Beyond traditional reference managers',
+            body: isZh ? '不仅管理论文，更支持深度检索、问答与知识协作。' : 'More than paper management, with retrieval, Q&A, and collaborative knowledge workflows built in.',
+          },
         ],
-        primaryLabel: '打开 Library',
-        secondaryLabel: '回到首页',
+        primaryLabel: isZh ? '打开 Library' : 'Open Library',
+        secondaryLabel: isZh ? '回到首页' : 'Back to Home',
         onPrimaryAction: () => onNavigate?.('library'),
         onSecondaryAction: () => setActivePage('home'),
       },
       paperclaw: {
         badge: 'Feature',
-        title: 'PaperClaw: 为论文复现与实验工作流准备的介绍页',
-        subtitle: '连接论文阅读、复现实验和研究执行，让功能入口更像真实实验台。',
-        description: '这是 PaperClaw 的 SEO 介绍页，目标是说明它和 Scholar Search 的关系，而不是让它在首页与搜索主路径平级竞争。',
-        titleTag: 'PaperClaw | WisPaper Feature',
-        metaDescription: '了解 WisPaper PaperClaw：从论文检索延伸到复现、实验执行和研究工程流程。',
-        pills: ['Reproduction workflow', 'Experiment support', 'Research execution'],
+        title: isZh ? 'PaperClaw: 从论文阅读走向实验复现' : 'PaperClaw: From Paper Reading to Experiment Reproduction',
+        subtitle: isZh
+          ? '围绕论文复现与实验执行设计，帮助你自动推进环境配置、实验运行与结果验证，把研究执行真正落到实验台上。'
+          : 'Built for paper reproduction and experiment execution, helping you move from reading a paper to setting up environments, running experiments, and validating outcomes.',
+        description: isZh
+          ? '适合在确定目标论文后继续推进复现实验，是 Scholar Agent 在研究执行层的关键能力落点。'
+          : 'Designed for the stage after you have chosen a target paper, making it a core execution layer within the broader Scholar Agent workflow.',
+        titleTag: isZh ? 'PaperClaw - 论文复现与实验执行 | WisPaper' : 'PaperClaw - Paper Reproduction and Experiment Execution | WisPaper',
+        metaDescription: isZh
+          ? 'WisPaper PaperClaw 支持论文复现、实验环境配置、实验执行与结果验证，帮助科研人员把阅读快速推进到可执行实验。'
+          : 'WisPaper PaperClaw supports paper reproduction, environment setup, experiment execution, and result verification for turning reading into executable research.',
+        pills: isZh ? ['论文复现', '实验支持', '研究执行'] : ['Paper Reproduction', 'Experiment Support', 'Research Execution'],
         overview: [
-          { title: '把论文转成可执行任务', body: '不止是看论文，而是继续推进到复现和实验组织。' },
-          { title: '适合方法验证阶段', body: '当你已经选定候选论文后，PaperClaw 的价值会更明确。' },
-          { title: '与 Search 串联而不是并列', body: '先搜索再复现，路径更自然。' },
+          {
+            title: isZh ? '自动推进复现实验' : 'Automated reproduction workflow',
+            body: isZh
+              ? '从论文方法走向实验执行，自动串联环境准备、依赖配置、运行与结果检查。'
+              : 'Move from method understanding to execution by automating environment setup, dependency handling, runs, and result checks.',
+          },
+          {
+            title: isZh ? '服务方法验证阶段' : 'Built for validation phases',
+            body: isZh
+              ? '当你已经筛出值得深入的论文，PaperClaw 能把“是否可复现”快速变成可验证问题。'
+              : 'Once you have shortlisted important papers, PaperClaw helps turn reproducibility into something you can quickly test.',
+          },
+          {
+            title: isZh ? '与搜索和问答联动' : 'Connected to search and Q&A',
+            body: isZh
+              ? '先检索、再理解、再复现，形成自然连续的科研执行链路。'
+              : 'Search, understand, then reproduce in one continuous workflow instead of jumping across disconnected tools.',
+          },
         ],
         highlights: [
-          { title: '解释复现产品的定位', body: '让用户知道这是研究执行层工具，而不是普通搜索变体。' },
-          { title: '适合承接具体方法查询', body: '尤其对工程型用户更有说服力。' },
-          { title: '帮助功能线不打散首页', body: '通过 SEO 页解释，而不是在首页平均展示。' },
-          { title: 'CTA 回到真实复现工作区', body: '介绍页和实际工具页面分工清楚。' },
+          {
+            title: isZh ? '一键实验推进' : 'One-click experiment setup',
+            body: isZh ? '减少从论文到代码、从阅读到实验的手工衔接成本。' : 'Cuts the manual overhead between understanding a paper and getting experiments running.',
+          },
+          {
+            title: isZh ? '更适合工程型研究' : 'Great for engineering-heavy research',
+            body: isZh ? '尤其适合需要快速验证模型、代码与实验条件的场景。' : 'Especially useful when validating implementations, environments, and empirical claims.',
+          },
+          {
+            title: isZh ? '研究执行层能力' : 'Execution-layer capability',
+            body: isZh ? '明确它不是搜索变体，而是科研工作流中负责落地执行的工具。' : 'Clarifies that it is not another search interface but an execution layer for research workflows.',
+          },
+          {
+            title: isZh ? '可与 Agent 协同' : 'Works with Scholar Agent',
+            body: isZh ? '和 Agent、Search、Library 配合时，复现链路会更完整。' : 'Becomes more powerful when paired with Agent, Search, and Library workflows.',
+          },
         ],
-        primaryLabel: '打开 PaperClaw',
-        secondaryLabel: '回到首页',
+        primaryLabel: isZh ? '打开 PaperClaw' : 'Open PaperClaw',
+        secondaryLabel: isZh ? '回到首页' : 'Back to Home',
         onPrimaryAction: () => onNavigate?.('paper-reproduction'),
         onSecondaryAction: () => setActivePage('home'),
       },
       'idea-discovery': {
         badge: 'Feature',
-        title: 'Idea Discovery: 从检索结果继续挖研究方向',
-        subtitle: '当搜索不再只是找论文，而是开始形成研究问题、方法路线和选题机会。',
-        description: 'Idea Discovery 的 SEO 页重点是说明它如何承接搜索结果并支持选题探索，而不是在首页和 Search 并列抢主路径。',
-        titleTag: 'Idea Discovery | WisPaper Feature',
-        metaDescription: '了解 WisPaper Idea Discovery：从学术检索结果中继续发现研究方向、潜在问题和选题机会。',
-        pills: ['Research ideas', 'Direction discovery', 'Follow-up workflow'],
+        title: isZh ? 'Idea Discovery: 激发科研灵感与选题发现' : 'Idea Discovery: Spark Research Ideas and Topic Discovery',
+        subtitle: isZh
+          ? '通过启发式对话与研究脉络分析，帮助你从已有文献中发现研究空白、潜在方向与下一步可做的问题。'
+          : 'Uses heuristic dialogue and research-context analysis to uncover gaps, promising directions, and next-step questions from existing literature.',
+        description: isZh
+          ? '适合课题开题、方向摸排与早期研究探索，是 Scholar Agent 在选题与灵感发现阶段的重要入口。'
+          : 'Built for early-stage topic exploration, proposal research, and idea generation as an upstream capability of the Scholar Agent workflow.',
+        titleTag: isZh ? 'Idea Discovery - 科研灵感与选题发现 | WisPaper' : 'Idea Discovery - Research Ideas and Topic Discovery | WisPaper',
+        metaDescription: isZh
+          ? 'WisPaper Idea Discovery 通过启发式对话、研究空白识别与方向分析，帮助科研人员更快发现可研究的问题与选题机会。'
+          : 'WisPaper Idea Discovery helps researchers uncover topic opportunities through heuristic dialogue, gap identification, and direction analysis.',
+        pills: isZh ? ['研究灵感', '方向发现', '选题探索'] : ['Research Ideas', 'Direction Discovery', 'Topic Exploration'],
         overview: [
-          { title: '从结果中看空白', body: '把搜索结果继续组织成方法簇、问题簇和研究空白。' },
-          { title: '适合课题探索期', body: '尤其适合博士、研究助理或创新型算法团队。' },
-          { title: '与 Survey 形成衔接', body: '搜索找到材料，Idea Discovery 帮你抽出方向。' },
+          {
+            title: isZh ? '苏格拉底式启发对话' : 'Socratic-style exploration',
+            body: isZh
+              ? '通过连续追问与启发式交流，帮助你澄清问题意识、研究假设与潜在创新点。'
+              : 'Guides you through iterative questioning to clarify research hypotheses, problem framing, and possible innovation angles.',
+          },
+          {
+            title: isZh ? '研究空白识别' : 'Research gap discovery',
+            body: isZh
+              ? '从现有文献中抽取尚未被充分解决的问题，帮助你更快筛出值得切入的方向。'
+              : 'Identifies underexplored questions from existing literature so you can surface worthwhile directions faster.',
+          },
+          {
+            title: isZh ? '选题与路线形成' : 'Topic formation and planning',
+            body: isZh
+              ? '把零散想法组织成清晰的研究方向、方法路线与下一步行动。'
+              : 'Turns scattered ideas into clearer topics, method paths, and concrete next steps.',
+          },
         ],
         highlights: [
-          { title: 'SEO 上讲场景，不讲玄学', body: '强调选题、方向判断和研究问题发现。' },
-          { title: '解释它在工作流中的位置', body: '不是独立入口，而是 Search 的扩展能力。' },
-          { title: '降低首次理解门槛', body: '用户能快速明白为什么需要它。' },
-          { title: 'CTA 进入真实功能页', body: '保持介绍页与产品页分层。' },
+          {
+            title: isZh ? '灵感发现更系统' : 'Systematic idea generation',
+            body: isZh ? '把抽象灵感具体化成可继续验证和推进的问题。' : 'Turns vague inspiration into research questions you can actually validate and pursue.',
+          },
+          {
+            title: isZh ? '适合课题前期' : 'Built for early-stage research',
+            body: isZh ? '尤其适合博士生、研究助理和探索新方向的团队。' : 'Especially useful for PhD students, research assistants, and teams exploring new directions.',
+          },
+          {
+            title: isZh ? '与搜索和综述衔接' : 'Connected to search and survey',
+            body: isZh ? '搜索提供材料，综述提供结构，Idea Discovery 提供方向判断。' : 'Search gives you materials, Survey gives you structure, and Idea Discovery helps you decide where to go next.',
+          },
+          {
+            title: isZh ? '帮助更快选题' : 'Faster topic selection',
+            body: isZh ? '减少在早期方向判断上的反复试错。' : 'Cuts down the trial-and-error often spent choosing a research direction.',
+          },
         ],
-        primaryLabel: '打开 Idea Discovery',
-        secondaryLabel: '回到首页',
+        primaryLabel: isZh ? '打开 Idea Discovery' : 'Open Idea Discovery',
+        secondaryLabel: isZh ? '回到首页' : 'Back to Home',
         onPrimaryAction: () => onNavigate?.('idea-discovery'),
         onSecondaryAction: () => setActivePage('home'),
       },
@@ -424,49 +622,115 @@ export function HomePage({ onNavigateToWorkspace, onNavigate, onOpenPricing, onS
       },
       'ai-feeds': {
         badge: 'Resources',
-        title: 'AI Feeds: 持续发现研究方向与新论文的资源页',
-        subtitle: '为已经明确研究方向的用户提供持续跟踪与发现入口。',
-        description: 'AI Feeds 放在 Resources 下更合理，因为它承接的是持续输入和趋势跟踪，而不是首页第一次访问的主路径。',
-        titleTag: 'AI Feeds | WisPaper Resources',
-        metaDescription: '了解 WisPaper AI Feeds：用于持续跟踪论文、趋势和研究方向的资源页面。',
-        pills: ['Trend tracking', 'Research feed', 'Continuous discovery'],
+        title: isZh ? 'AI Feeds & Trends: 个性化学术订阅与趋势追踪' : 'AI Feeds & Trends: Personalized Research Feeds and Trend Tracking',
+        subtitle: isZh
+          ? '围绕研究兴趣与检索历史，持续推送最新顶会顶刊论文、热点方向与爆款研究，让你始终紧跟学术前沿。'
+          : 'Continuously tracks top papers, emerging directions, and trending studies around your interests so you can stay at the frontier of your field.',
+        description: isZh
+          ? '适合已经明确研究方向、需要长期跟踪学科热点与最新成果的科研用户。'
+          : 'Built for researchers who already know their field and need ongoing monitoring of new papers, hot topics, and trend shifts.',
+        titleTag: isZh ? 'AI Feeds & Trends - 学术订阅源与趋势追踪 | WisPaper' : 'AI Feeds & Trends - Academic Feeds and Trend Tracking | WisPaper',
+        metaDescription: isZh
+          ? 'WisPaper AI Feeds & Trends 支持个性化学术订阅、科研晨报、热点论文追踪与趋势分析，帮助你持续获取前沿动态。'
+          : 'WisPaper AI Feeds & Trends provides personalized research feeds, morning briefs, hot-paper tracking, and trend analysis for continuous frontier awareness.',
+        pills: isZh ? ['AI 订阅源', '学术趋势', '动态追踪'] : ['AI Feeds', 'Scholar Trends', 'Trend Tracking'],
         overview: [
-          { title: '适合持续关注领域动态', body: '对已有研究方向的用户更有价值。' },
-          { title: '不与首次搜索入口冲突', body: '放在 Resources 下更符合信息架构。' },
-          { title: '从搜索延伸到长期发现', body: '先找到方向，再持续跟踪。' },
+          {
+            title: isZh ? '专属科研晨报' : 'Personalized morning brief',
+            body: isZh
+              ? '每天自动汇总研究领域最新的顶会与顶刊论文，形成专属于你的学术信息流。'
+              : 'Automatically compiles the newest top conference and journal papers into a daily brief tailored to your field.',
+          },
+          {
+            title: isZh ? '爆款论文追踪' : 'Trending paper tracking',
+            body: isZh
+              ? '实时捕捉高热度、高引用潜力与学科突破型论文，避免错过重要前沿。'
+              : 'Tracks breakout papers and fast-rising trends so important frontier work does not slip past you.',
+          },
+          {
+            title: isZh ? '个性化推送' : 'Personalized delivery',
+            body: isZh
+              ? '结合你的研究兴趣与检索历史，持续推送最相关的新动态，而不是泛泛的学术资讯。'
+              : 'Tailors research updates to your interests and search history instead of showing generic academic news.',
+          },
         ],
         highlights: [
-          { title: '资源页强调场景延伸', body: '让用户知道它服务于 Search 后的连续研究行为。' },
-          { title: '与首页主路径错峰', body: '避免在首页分散第一次访问的注意力。' },
-          { title: '适合承接 trends / research feed 意图', body: '也方便后续继续做资源型 SEO 页面。' },
-          { title: 'CTA 进入真实 workspace', body: '可以直接跳到现有工作区。' },
+          {
+            title: isZh ? '学科热点趋势' : 'Disciplinary trends and hot papers',
+            body: isZh ? '敏锐捕捉不同学科的热点与前沿变化。' : 'Surfaces the most important disciplinary shifts and hot papers quickly.',
+          },
+          {
+            title: isZh ? '个性化定制推送' : 'Personalized customization',
+            body: isZh ? '千人千面的科研资讯流，更贴近你真正关心的方向。' : 'Delivers a research feed shaped around what actually matters to you.',
+          },
+          {
+            title: isZh ? '即时获取前沿动态' : 'Instant frontier awareness',
+            body: isZh ? '让你持续保持研究敏感度和方向判断力。' : 'Helps you maintain frontier awareness and stronger research judgment.',
+          },
+          {
+            title: isZh ? '适合长期追踪' : 'Built for continuous discovery',
+            body: isZh ? '不是一次性搜索结果，而是持续输入的研究观察窗口。' : 'Not a one-off search result, but an ongoing feed for long-term research tracking.',
+          },
         ],
-        primaryLabel: '打开 AI Feeds',
-        secondaryLabel: '回到首页',
+        primaryLabel: isZh ? '打开 AI Feeds' : 'Open AI Feeds',
+        secondaryLabel: isZh ? '回到首页' : 'Back to Home',
         onPrimaryAction: onNavigateToWorkspace,
         onSecondaryAction: () => setActivePage('home'),
       },
       'ai-survey': {
         badge: 'Feature',
-        title: 'AI Survey: 将搜索结果转成结构化综述能力',
-        subtitle: '把分散的搜索结果继续组织成主题分组、方法路线、数据集对比和研究空白，作为 Search 之后的核心功能介绍。',
-        description: 'AI Survey 在 Feature 中承担功能解释角色，说明它如何把 Scholar Search 的结果继续推进成综述、related work 和研究判断。',
-        titleTag: 'AI Survey | WisPaper Feature',
-        metaDescription: '了解 WisPaper AI Survey：将 Scholar Search 结果继续组织成结构化文献综述、related work 与研究缺口分析功能。',
-        pills: ['AI Survey', 'Literature review', 'Research organization'],
+        title: isZh ? 'AI Survey: 一键生成结构化学术综述' : 'AI Survey: One-Click Structured Literature Review',
+        subtitle: isZh
+          ? '自动梳理研究脉络、生成领域 Taxonomy，并通过可视化知识图谱帮助你快速建立全局视角。'
+          : 'Automatically maps research trajectories, generates domain taxonomies, and visualizes knowledge structures so you can understand a field at a glance.',
+        description: isZh
+          ? '适合开题调研、技术脉络梳理与 related work 撰写，把分散论文继续推进成系统综述。'
+          : 'Built for topic proposal research, trajectory mapping, and related-work synthesis so scattered papers become a coherent survey.',
+        titleTag: isZh ? 'AI Survey - AI 文献综述与 Taxonomy 生成 | WisPaper' : 'AI Survey - AI Literature Review and Taxonomy Generation | WisPaper',
+        metaDescription: isZh
+          ? 'WisPaper AI Survey 支持一键生成深度文献综述、自动 Taxonomy 构建与可视化科研地图，帮助你快速掌握领域全貌。'
+          : 'WisPaper AI Survey creates in-depth literature reviews, automated taxonomies, and visual research maps to help you quickly understand an academic field.',
+        pills: isZh ? ['AI 综述', '分类体系', '科研脉络'] : ['AI Survey', 'Taxonomy', 'Research Context'],
         overview: [
-          { title: '搜索之后的自然下一步', body: '不是和 Search 并列，而是 Search 的延长线。' },
-          { title: '把结果组织成综述框架', body: '帮助用户从论文列表推进到结构化理解与比较。' },
-          { title: '适合高意图科研用户', body: '尤其适合研究生、博士和实验室成员。' },
+          {
+            title: isZh ? '课题开题调研' : 'Topic proposal research',
+            body: isZh
+              ? '在立项或开题阶段，一键生成全景式综述，快速掌握历史背景、研究现状与未来挑战。'
+              : 'Generate a panoramic review at the proposal stage to quickly understand a field’s history, current landscape, and open challenges.',
+          },
+          {
+            title: isZh ? '技术脉络梳理' : 'Technology trajectory mapping',
+            body: isZh
+              ? '面对海量文献时，用 Taxonomy 与知识图谱一目了然地看清技术分支与演进流派。'
+              : 'Use taxonomy and knowledge maps to clarify technical branches and evolutionary schools across large bodies of literature.',
+          },
+          {
+            title: isZh ? '可视化全局理解' : 'Visual big-picture understanding',
+            body: isZh
+              ? '把论文列表转成结构化图景，帮助你更快建立领域全貌和关键关联。'
+              : 'Transforms paper lists into structured maps that reveal the overall shape of a field and its key connections.',
+          },
         ],
         highlights: [
-          { title: '作为 Feature 解释真实能力', body: '把 Survey 的价值讲成用户任务和结果。' },
-          { title: '承接首页中的 workflow narrative', body: '让 Search 不只是搜索，而是一个工作流起点。' },
-          { title: '适合与 Search、QA、Library 串联', body: '帮助整条研究路径更完整。' },
-          { title: 'CTA 进入真实 AI Survey 场景', body: '用户看完可以直达工作区。' },
+          {
+            title: isZh ? '自动化文献综述' : 'Automated literature review',
+            body: isZh ? '高效提炼核心观点、研究路线与领域分工。' : 'Efficiently extracts key ideas, method lines, and field structure.',
+          },
+          {
+            title: isZh ? 'Taxonomy 自动生成' : 'Automated taxonomy generation',
+            body: isZh ? '结构化呈现领域技术分支、主题簇与演进脉络。' : 'Builds structured taxonomies of branches, topic clusters, and evolution paths.',
+          },
+          {
+            title: isZh ? '可视化科研地图' : 'Visual research map',
+            body: isZh ? '用图谱直观呈现核心论文及其关系，降低理解复杂度。' : 'Visualizes core papers and their relationships for faster comprehension.',
+          },
+          {
+            title: isZh ? '实时动态更新' : 'Real-time dynamic updates',
+            body: isZh ? '帮助你持续追踪最新研究进展，而不只停留在一次性综述。' : 'Keeps surveys closer to the latest developments instead of leaving them static.',
+          },
         ],
-        primaryLabel: '进入 AI Survey',
-        secondaryLabel: '回到首页',
+        primaryLabel: isZh ? '进入 AI Survey' : 'Open AI Survey',
+        secondaryLabel: isZh ? '回到首页' : 'Back to Home',
         onPrimaryAction: onNavigateToWorkspace,
         onSecondaryAction: () => setActivePage('home'),
       },
@@ -593,7 +857,7 @@ export function HomePage({ onNavigateToWorkspace, onNavigate, onOpenPricing, onS
     };
 
     const config = configMap[page];
-    return <MarketingSeoPage {...config} />;
+    return <MarketingSeoPage language={language} {...config} />;
   };
 
   const isFeaturePage = featureMenuItems.some((item) => item.key === activePage);
@@ -652,7 +916,7 @@ export function HomePage({ onNavigateToWorkspace, onNavigate, onOpenPricing, onS
                     type="button"
                     className={cn(navItemClass, isFeaturePage && "border-slate-200 bg-white text-slate-950 shadow-[0_14px_30px_-20px_rgba(15,23,42,0.45)]")}
                   >
-                    <span>Feature</span>
+                    <span>Features</span>
                     <ChevronDown className="h-4 w-4 transition-transform duration-300 group-data-[state=open]:rotate-180" />
                   </button>
                 </DropdownMenuTrigger>

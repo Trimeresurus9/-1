@@ -198,9 +198,11 @@ export default function App() {
     setHasSearched(false);
   };
 
+  const isReaderView = viewMode === "detail";
+
   return (
     <LanguageProvider>
-      <div className="min-h-screen bg-white flex">
+      <div className={isReaderView ? "h-screen overflow-hidden bg-white flex" : "min-h-screen bg-white flex"}>
         {/* Left Sidebar - Only show in list view, library view, and scholar-qa view */}
         {(viewMode === "list" || viewMode === "library" || viewMode === "scholar-qa" || viewMode === "all-feeds" || viewMode === "paper-reproduction" || viewMode === "idea-discovery") && (
           <LeftSidebar
@@ -216,7 +218,7 @@ export default function App() {
         )}
 
         {/* Main Content */}
-        <div className="flex-1 flex flex-col min-w-0">
+        <div className={isReaderView ? "flex-1 flex flex-col min-w-0 overflow-hidden" : "flex-1 flex flex-col min-w-0"}>
           {viewMode === "home" ? (
             // Show HomePage
             <HomePage
